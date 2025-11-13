@@ -5,13 +5,13 @@ async function main() {
   try {
     // Verificamos conexión
     await prisma.$connect();
-    console.log("✅ Conectado a la base de datos con Prisma");
+    console.log("conectado a la base de datos con Prisma");
 
     server.listen(5432, () => {
-      console.log("🚀 Servidor corriendo en puerto 5432");
+      console.log("servidor corriendo en puerto 5432");
     });
   } catch (error) {
-    console.error("❌ Error al conectar a la base de datos:", error);
+    console.error("error al conectar a la base de datos:", error);
   } finally {
     // No cerramos Prisma aún para que la app siga funcionando
   }

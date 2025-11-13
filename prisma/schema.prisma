@@ -6,3 +6,110 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Producto{
+  id                  Int     @id @default(autoincrement())
+  nombre              String
+  descripcion         String
+  precio_venta        Float
+  precio_compra       Float
+  categoria           String
+  SKU                 String  @unique
+  stock_actual        Int
+  stock_minimo        Int
+  enable              Boolean
+
+  //relacion con inventario
+  inventarioId        Int         @unique
+  inventario          Inventario  @relation(fields: [inventarioId],references: [id])
+}
+
+model Usuario{
+  id                Int       @id @default(autoincrement())
+  nombre            String    @unique
+  contraseña        String    @unique
+  enable            Boolean
+  direccion         String
+
+  //relacion con negocio
+  negocioId         Int       @unique
+  negocio           Negocio   @relation(fields: [negocioId],references: [id])
+}
+
+model Inventario{
+  id                Int       @id @default(autoincrement())
+  ubicacion         Int
+
+  productos         Producto[]
+
+  //relacion con negocio
+  negocioId      Int       @unique
+  negocio        Negocio   @relation(fields: [negocioId],references: [id])
+}
+
+model Negocio{
+  id                Int       @id @default(autoincrement())
+  logo              String    @unique
+  nombre            String
+  descripcion       String
+  enable            Boolean
+
+  inventario        Inventario?
+  usuario           Usuario?
+
+  ventas            Venta[]
+  proveedores       Proveedor[]
+}
+
+model Proveedor{
+  id                Int       @id @default(autoincrement())
+  empresa           String
+  descripcion       String
+
+  compras           Compra[]
+
+  //relacion con negocio
+  negocioId         Int     @unique
+  negocio           Negocio @relation(fields: [negocioId],references: [id])
+}
+
+model Venta{
+  id                Int       @unique @default(autoincrement())
+  total             Float
+  subtotal          Float
+  fecha             DateTime
+  carga_impositiva  Float
+  ident_factura     Int       @unique
+  estado            Boolean
+  descuento         Float
+
+  factura           Factura?
+
+  //relacion con negocio
+  negocioId           Int     @unique
+  negocio           Negocio   @relation(fields: [negocioId],references: [id])
+}
+
+model Factura{
+  id                Int       @id @default(autoincrement())
+  num_comprobante   Int       @unique
+  fecha_emision     DateTime
+  fecha_vencimiento DateTime
+
+  //relacion con venta
+  ventaId           Int       @unique
+  venta             Venta     @relation(fields: [ventaId],references: [id])
+}
+
+model Compra{
+  id                Int       @id @default(autoincrement())
+  total             Float
+  carga_impositiva  Float
+  ident_factura     Int       @unique
+  estado            Boolean
+
+  //relacion con proveedor
+  proeedorId          Int       @unique
+  proveedor         Proveedor @relation(fields: [proeedorId],references: [id])
+}
+
