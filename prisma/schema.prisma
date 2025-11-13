@@ -109,7 +109,7 @@ model Compra{
   estado            Boolean
 
   //relacion con proveedor
-  proeedorId          Int       @unique
-  proveedor         Proveedor @relation(fields: [proeedorId],references: [id])
+  proveedorId          Int       @unique
+  proveedor         Proveedor @relation(fields: [proveedorId],references: [id])
 }
 
