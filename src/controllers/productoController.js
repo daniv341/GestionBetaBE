@@ -90,7 +90,7 @@ const deleteProducto = async (req, res) => {
     }
 };
 
-export{
+export {
     getAllProductos,
     getProductoById,
     createProducto,

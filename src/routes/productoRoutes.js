@@ -1,5 +1,5 @@
-const express = require("express");
-const productoController = require("../controllers/productoController");
+import express from "express";
+import * as productoController from "../controllers/productoController.js";
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.put("/:id", productoController.updateProducto);
 // DELETE /api/v1/productos/:id
 router.delete("/:id", productoController.deleteProducto);
 
-module.exports = router;
+export default router;

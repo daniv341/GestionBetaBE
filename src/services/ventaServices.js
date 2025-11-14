@@ -1,21 +1,25 @@
-const prisma = require("../config/db");
-const { CreateVentaDTO, UpdateVentaDTO } = require("../models/venta");
+import prisma from "../config/db.js";
+import { CreateVentaDTO, UpdateVentaDTO } from "../models/venta.js";
 
 function validarDTO(data, dto) {
-    for (const campo of campos) {
+    const keys = Object.keys(dto);
+  
+    for (const campo of keys) {
       const rules = dto[campo];
   
-      //si el campo es requerido pero no se envio
+      if (!rules) continue;
+  
+      // si el campo es requerido pero no valido
       if (rules.required && data[campo] === undefined) {
         throw new Error(`El campo "${campo}" es obligatorio`);
       }
   
-      //si el campo viene null pero el dto no lo permite
+      // si el campo es null pero no se lo permite
       if (data[campo] === null && rules.nullable === false) {
         throw new Error(`El campo "${campo}" no puede ser null`);
       }
     }
-}  
+  }
 
 const getAllVentas = async () => {
     return prisma.Venta.findMany();
@@ -39,18 +43,21 @@ const updateVenta = async (id, data) => {
     validarDTO(data, UpdateVentaDTO);
   
     return prisma.Venta.update({
-        where: {id_venta: id},
+        where: {id: id},
         data,
     });
 };
 
 const deleteVenta = async (id) => {
     return prisma.Venta.delete({
-        where: {id_venta: id}
+        where: {id: id}
     });
 };
 
-module.exports = {
+export {
+    //funciones varias
+    validarDTO,
+    //api
     getAllVentas,
     getVentaById,
     createVenta,

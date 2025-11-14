@@ -86,8 +86,8 @@ model Venta{
   factura           Factura?
 
   //relacion con negocio
-  negocioId         Int           @unique
-  negocio           Negocio       @relation(fields: [negocioId],references: [id])
+  negocioId         Int?           @unique
+  negocio           Negocio?       @relation(fields: [negocioId],references: [id])
 }
 
 model Factura{

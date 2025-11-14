@@ -1,10 +1,10 @@
-const express = require("express");
-const morgan = require("morgan");
-const cors = require("cors");
-const routes = require("./routes/index.js"); // importa tu router principal
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import routes from "./routes/index.js"; // importa tu router principal
 
-const productoRoutes = require("./routes/productoRoutes.js");
-const ventaRoutes = require("./routes/ventaRoutes.js");
+import productoRoutes from "./routes/productoRoutes.js";
+import ventaRoutes from "./routes/ventaRoutes.js";
 
 const app = express();
 
@@ -23,5 +23,6 @@ app.listen(3000, () => {
     console.log("Servidor corriendo en http://localhost:3000");
 });
 
-module.exports = app;
+export default app;
+
 

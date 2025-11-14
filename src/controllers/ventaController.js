@@ -1,9 +1,10 @@
-const ventaService = require("../services/ventaServices");
-const { CreateVentaDTO, UpdateVentaDTO } = require("../models/venta");
+import * as ventaServices from "../services/ventaServices.js";
+import { CreateVentaDTO, UpdateVentaDTO } from "../models/venta.js";
+import { validarDTO } from "../services/ventaServices.js";
 
 const getAllVentas = async (req, res) => {
     try {
-        const ventas = await ventaService.getAllVentas();
+        const ventas = await ventaServices.getAllVentas();
         res.json(ventas)
     } catch (error) {
         console.error("Error getting ventas:", error);
@@ -34,9 +35,9 @@ const createVenta = async (req, res) => {
     try {
         const data = req.body;
 
-        validateDTO(data, CreateVentaDTO);
+        validarDTO(data, CreateVentaDTO);
 
-        const venta = await ventaService.createVenta(data);
+        const venta = await ventaServices.createVenta(data);
         return res.status(201).json(venta);
 
     } catch (error) {
@@ -55,9 +56,9 @@ const updateVenta = async (req, res) => {
 
         const data = req.body;
 
-        validateDTO(data, UpdateVentaDTO);
+        validarDTO(data, UpdateVentaDTO);
 
-        const venta = await ventaService.updateVenta(id, data);
+        const venta = await ventaServices.updateVenta(id, data);
 
         if (!venta) {
             return res.status(404).json({ error: "Venta not found" });
@@ -79,7 +80,7 @@ const deleteVenta = async (req, res) => {
         return res.status(400).json({ error: "Invalid venta ID" });
       }
 
-      await ventaService.deleteVenta(id);
+      await ventaServices.deleteVenta(id);
       return res.status(204).send();
 
     } catch (error) {
@@ -88,7 +89,7 @@ const deleteVenta = async (req, res) => {
     }
 };
 
-module.exports = {
+export {
     getAllVentas,
     getVentaById,
     createVenta,

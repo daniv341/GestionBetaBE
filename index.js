@@ -1,11 +1,11 @@
-const server = require("./src/app.js");
-const { prisma } = require("./src/db.js");
+import server from "./src/app.js";
+import { prisma } from "./src/db.js";
 
 async function main() {
   try {
     // Verificamos conexión
     await prisma.$connect();
-    console.log("conectado a la base de datos con Prisma");
+    //console.log("conectado a la base de datos con Prisma");
 
     server.listen(5432, () => {
       console.log("base de datos corriendo en puerto 5432");

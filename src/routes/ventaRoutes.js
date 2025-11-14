@@ -1,5 +1,5 @@
-const express = require("express");
-const ventaController = require("../controllers/ventaController");
+import express from "express";
+import * as ventaController from "../controllers/ventaController.js";
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.put("/:id", ventaController.updateVenta);
 // DELETE /api/v1/ventas/:id
 router.delete("/:id", ventaController.deleteVenta);
 
-module.exports = router;
+export default router;
