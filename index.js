@@ -13,7 +13,7 @@ async function main() {
   } catch (error) {
     console.error("error al conectar a la base de datos:", error);
   } finally {
-    // No cerramos Prisma aún para que la app siga funcionando
+    // no se cierra Prisma aún para que la app siga funcionando
   }
 }
 

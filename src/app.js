@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // Rutas
-app.use("/api", routes); // ✅ importante: 'routes' debe ser un router válido
+app.use("/api", routes); // importante: 'routes' debe ser un router válido
 
 module.exports = app;
 
