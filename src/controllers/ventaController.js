@@ -1,7 +1,7 @@
 const ventaService = require("../services/ventaServices");
 const { CreateVentaDTO, UpdateVentaDTO } = require("../models/venta");
 
-const getAllVentas = async () => {
+const getAllVentas = async (req, res) => {
     try {
         const ventas = await ventaService.getAllVentas();
         res.json(ventas)

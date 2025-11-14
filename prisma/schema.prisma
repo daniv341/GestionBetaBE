@@ -20,8 +20,8 @@ model Producto{
   enable              Boolean     @default(true)
 
   //relacion con inventario
-  inventarioId        Int         @unique
-  inventario          Inventario  @relation(fields: [inventarioId],references: [id])
+  inventarioId        Int?         @unique
+  inventario          Inventario?  @relation(fields: [inventarioId],references: [id])
 }
 
 model Usuario{

@@ -1,9 +1,10 @@
-const productoService = require("../services/productoServices");
-const { CreateProductoDTO, UpdateProductoDTO } = require("../models/producto");
+import * as productoServices from "../services/productoServices.js";
+import { CreateProductoDTO, UpdateProductoDTO } from "../models/producto.js";
+import { validarDTO } from "../services/productoServices.js";
 
 const getAllProductos = async (req, res) => {
     try {
-        const productos = await productoService.getAllProductos();
+        const productos = await productoServices.getAllProductos();
         res.json(productos);
     } catch (error) {
         console.error("Error getting productos:", error);
@@ -34,13 +35,14 @@ const createProducto = async (req, res) => {
     try {
         const data = req.body;
 
-        validateDTO(data, CreateProductoDTO);
+        //console.log("REQ.BODY:", req.body);
+        validarDTO(data, CreateProductoDTO);
 
-        const producto = await productoService.createProducto(data);
+        const producto = await productoServices.createProducto(data);
         return res.status(201).json(producto);
 
     } catch (error) {
-        console.error("Error creating producto:", error);
+        console.error("Error creating Producto:", error);
         return res.status(500).json({ error: error.message });
     }
 };
@@ -50,14 +52,14 @@ const updateProducto = async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            return res.status(400).json({ error: "Invalid producto ID" });
+            return res.status(400).json({ error: "Invalid Producto ID" });
         }
 
         const data = req.body;
 
-        validateDTO(data, UpdateProductoDTO);
+        validarDTO(data, UpdateProductoDTO);
 
-        const producto = await productoService.updateProducto(id, data);
+        const producto = await productoServices.updateProducto(id, data);
 
         if (!producto) {
             return res.status(404).json({ error: "Producto not found" });
@@ -66,7 +68,7 @@ const updateProducto = async (req, res) => {
         return res.json(producto);
 
     } catch (error) {
-        console.error("Error updating producto:", error);
+        console.error("Error updating Producto:", error);
         return res.status(500).json({ error: error.message });
     }
 };
@@ -76,19 +78,19 @@ const deleteProducto = async (req, res) => {
       const id = parseInt(req.params.id);
 
       if (isNaN(id)) {
-        return res.status(400).json({ error: "Invalid producto ID" });
+        return res.status(400).json({ error: "Invalid Producto ID" });
       }
 
-      await productoService.deleteProducto(id);
+      await productoServices.deleteProducto(id);
       return res.status(204).send();
 
     } catch (error) {
-      console.error("Error deleting producto:", error);
+      console.error("Error deleting Producto:", error);
       return res.status(500).json({ error: error.message });
     }
 };
 
-module.exports = {
+export{
     getAllProductos,
     getProductoById,
     createProducto,
