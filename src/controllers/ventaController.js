@@ -1,6 +1,6 @@
 import * as ventaServices from "../services/ventaServices.js";
 import { CreateVentaDTO, UpdateVentaDTO } from "../models/venta.js";
-import { validarDTO } from "../services/ventaServices.js";
+import { validarDTO, ident_FacturaExistente } from "../services/ventaServices.js";
 
 const getAllVentas = async (req, res) => {
     try {
@@ -37,6 +37,12 @@ const createVenta = async (req, res) => {
 
         validarDTO(data, CreateVentaDTO);
 
+        const errorident_facturaExistente = await ident_FacturaExistente(data);
+
+        if (errorident_facturaExistente) {
+            return res.status(400).json({ error: `A venta with ident_Factura "${data.ident_Factura}" already exists` });
+        }
+
         const venta = await ventaServices.createVenta(data);
         return res.status(201).json(venta);
 
@@ -57,6 +63,12 @@ const updateVenta = async (req, res) => {
         const data = req.body;
 
         validarDTO(data, UpdateVentaDTO);
+
+        const errorident_facturaExistente = await ident_FacturaExistente(data);
+
+        if (errorident_facturaExistente) {
+            return res.status(400).json({ error: `A venta with ident_Factura "${data.ident_Factura}" already exists` });
+        }
 
         const venta = await ventaServices.updateVenta(id, data);
 

@@ -1,5 +1,4 @@
 import prisma from "../config/db.js";
-import { CreateProductoDTO, UpdateProductoDTO } from "../models/producto.js";
 
 function validarDTO(data, dto) {
   const keys = Object.keys(dto);
@@ -21,6 +20,11 @@ function validarDTO(data, dto) {
   }
 }
 
+const SKUExistente = async (data) => {
+  return prisma.Producto.findUnique({
+    where: { SKU: data.SKU },
+  })
+}
 
 const getAllProductos = async () => {
   return prisma.Producto.findMany();
@@ -39,16 +43,12 @@ const getProductoByCategoria = async (categoria) => {
 };
 
 const createProducto = async (data) => {
-  validarDTO(data, CreateProductoDTO);
-
   return prisma.Producto.create({
-    data,
+    data
   });
 };
 
 const updateProducto = async (id, data) => {
-  validarDTO(data, UpdateProductoDTO);
-
   return prisma.Producto.update({
     where: { id: id },
     data,
@@ -64,6 +64,7 @@ const deleteProducto = async (id) => {
 export {
   //funciones varias
   validarDTO,
+  SKUExistente,
   //api
   getAllProductos,
   getProductoById,

@@ -1,5 +1,5 @@
 import server from "./src/app.js";
-import { prisma } from "./src/db.js";
+import prisma from "./src/db.js";
 
 async function main() {
   try {

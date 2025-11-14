@@ -1,6 +1,6 @@
 import * as productoServices from "../services/productoServices.js";
 import { CreateProductoDTO, UpdateProductoDTO } from "../models/producto.js";
-import { validarDTO } from "../services/productoServices.js";
+import { validarDTO, SKUExistente } from "../services/productoServices.js";
 
 const getAllProductos = async (req, res) => {
     try {
@@ -35,8 +35,13 @@ const createProducto = async (req, res) => {
     try {
         const data = req.body;
 
-        //console.log("REQ.BODY:", req.body);
         validarDTO(data, CreateProductoDTO);
+
+        const errorSKUExistente = await SKUExistente(data);
+
+        if (errorSKUExistente) {
+            return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
+        }
 
         const producto = await productoServices.createProducto(data);
         return res.status(201).json(producto);
@@ -59,6 +64,12 @@ const updateProducto = async (req, res) => {
 
         validarDTO(data, UpdateProductoDTO);
 
+        const errorSKUExistente = await SKUExistente(data);
+
+        if (errorSKUExistente) {
+            return res.status(400).json({ error: `A product with SKU "${data.SKU}" already exists` });
+        }
+
         const producto = await productoServices.updateProducto(id, data);
 
         if (!producto) {
@@ -75,18 +86,18 @@ const updateProducto = async (req, res) => {
 
 const deleteProducto = async (req, res) => {
     try {
-      const id = parseInt(req.params.id);
+        const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return res.status(400).json({ error: "Invalid Producto ID" });
-      }
+        if (isNaN(id)) {
+            return res.status(400).json({ error: "Invalid Producto ID" });
+        }
 
-      await productoServices.deleteProducto(id);
-      return res.status(204).send();
+        await productoServices.deleteProducto(id);
+        return res.status(204).send();
 
     } catch (error) {
-      console.error("Error deleting Producto:", error);
-      return res.status(500).json({ error: error.message });
+        console.error("Error deleting Producto:", error);
+        return res.status(500).json({ error: error.message });
     }
 };
 
