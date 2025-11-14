@@ -8,7 +8,7 @@ async function main() {
     console.log("conectado a la base de datos con Prisma");
 
     server.listen(5432, () => {
-      console.log("servidor corriendo en puerto 5432");
+      console.log("base de datos corriendo en puerto 5432");
     });
   } catch (error) {
     console.error("error al conectar a la base de datos:", error);

@@ -1,5 +1,5 @@
-import prisma from "../config/db";
-import { CreateProductoDTO, UpdateProductoDTO } from "../models/producto";
+const prisma = require("../config/db");
+const { CreateProductoDTO, UpdateProductoDTO } = require("../models/producto");
 
 function validarDTO(data, dto) {
     const keys = Object.keys(dto);
@@ -19,7 +19,7 @@ function validarDTO(data, dto) {
     }
 }  
 
-const getAllProducto = async () => {
+const getAllProductos = async () => {
     return prisma.Producto.findMany();
 };
 
@@ -59,7 +59,7 @@ const deleteProducto = async (id) => {
 };
 
 module.exports = {
-    getAllProducto,
+    getAllProductos,
     getProductoById,
     getProductoByCategoria,
     createProducto,

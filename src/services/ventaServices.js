@@ -1,5 +1,5 @@
-import prisma from "../config/db";
-import { CreateVentaDTO, UpdateVentaDTO } from "../models/venta";
+const prisma = require("../config/db");
+const { CreateVentaDTO, UpdateVentaDTO } = require("../models/venta");
 
 function validarDTO(data, dto) {
     for (const campo of campos) {
@@ -17,7 +17,7 @@ function validarDTO(data, dto) {
     }
 }  
 
-const getAllVenta = async () => {
+const getAllVentas = async () => {
     return prisma.Venta.findMany();
 };
 
@@ -51,7 +51,7 @@ const deleteVenta = async (id) => {
 };
 
 module.exports = {
-    getAllVenta,
+    getAllVentas,
     getVentaById,
     createVenta,
     updateVenta,
