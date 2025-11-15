@@ -1,89 +1,29 @@
-export const CreateProductoDTO = {
-    nombre: {
-        type: "string", required: true, nullable: false
-    },
+import Joi from "joi"
 
-    descripcion: {
-        type: "string", required: true, nullable: false
-    },
+export const CreateProductoDTO = Joi.object({
+    nombre: Joi.string().strict().required(),
+    descripcion: Joi.string().strict().required(),
+    precio_venta: Joi.number().strict().positive().required(),
+    precio_compra: Joi.number().strict().positive().required(),
+    categoria: Joi.string().strict().required(),
+    SKU: Joi.string().strict().required(),
+    stock_actual: Joi.number().strict().positive().required(),
+    stock_minimo: Joi.number().strict().positive().required(),
+    enable: Joi.boolean().strict().required().default(true),
 
-    precio_venta: {
-        type: "number", required: true, nullable: false
-    },
+    inventarioId: Joi.number().allow(null)
+});
 
-    precio_compra: {
-        type: "number", required: true, nullable: false
-    },
-
-    categoria: {
-        type: "string", required: true, nullable: false
-    },
-
-    SKU: {
-        type: "string", required: true, nullable: false
-    },
-
-    stock_actual: {
-        type: "number", required: true, nullable: false
-    },
-
-    stock_minimo: {
-        type: "number", required: true, nullable: false
-    },
-
-    enable: {
-        type: "boolean", required: true, nullable: false, default: true
-    }
-};
-
-export const UpdateProductoDTO = {
-    descripcion: {
-        type: "string"
-    },
-
-    precio_venta: {
-        type: "number"
-    },
-
-    precio_compra: {
-        type: "number"
-    },
-
-    stock_actual: {
-        type: "number"
-    },
-
-    stock_minimo: {
-        type: "number"
-    },
-
-    enable: {
-        type: "boolean", default: true
-    }
-};
-
-export const ResponseProductoDTO = {
-    descripcion: {
-        type: "string"
-    },
-
-    precio_venta: {
-        type: "number"
-    },
-
-    precio_compra: {
-        type: "number"
-    },
-
-    stock_actual: {
-        type: "number"
-    },
-
-    stock_minimo: {
-        type: "number"
-    },
-
-    enable: {
-        type: "boolean"
-    }
-};
+export const UpdateProductoDTO = Joi.object({
+    nombre: Joi.string().strict().optional(),
+    descripcion: Joi.string().strict(),
+    precio_venta: Joi.number().strict().positive().optional(),
+    precio_compra: Joi.number().strict().positive().optional(),
+    categoria: Joi.string().strict().optional(),
+    SKU: Joi.string().strict(),
+    stock_actual: Joi.number().strict().positive(),
+    stock_minimo: Joi.number().strict().positive().optional(),
+    enable: Joi.boolean().strict().default(true).optional(),
+    
+    inventarioId: Joi.number().allow(null).optional()
+}).min(1);

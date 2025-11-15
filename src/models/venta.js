@@ -1,78 +1,25 @@
-export const CreateVentaDTO = {
+import Joi from "joi"
 
-    total: {
-        type: "number", required: true, nullable: false
-    },
+export const CreateVentaDTO = Joi.object({
+    total: Joi.number().strict().positive().required(),
+    subtotal: Joi.number().strict().positive().required(),
+    fecha: Joi.date().iso().strict().required(),
+    carga_impositiva: Joi.number().strict().positive().required(),
+    ident_factura: Joi.number().strict().positive().required(),
+    estado: Joi.boolean().strict().required().default(true),
+    descuento: Joi.number().strict().positive().required(),
 
-    subtotal: {
-        type: "number", required: true, nullable: false
-    },
+    negocioId: Joi.number().allow(null)
+});
 
-    fecha: {
-        type: "Date", required: true, nullable: false
-    },
+export const UpdateVentaDTO = Joi.object({
+    total: Joi.number().strict().positive().optional(),
+    subtotal: Joi.number().strict().positive().optional(),
+    fecha: Joi.date().iso().strict().optional(),
+    carga_impositiva: Joi.number().strict().positive().optional(),
+    ident_factura: Joi.number().strict().positive().optional(),
+    estado: Joi.boolean().strict().default(true),
+    descuento: Joi.number().strict().positive(),
 
-    carga_impositiva: {
-        type: "number", required: true, nullable: false
-    },
-
-    ident_factura: {
-        type: "number", required: true, nullable: false
-    },
-
-    estado: {
-        type: "boolean", required: true, nullable: false, default: true
-    },
-
-    descuento: {
-        type: "number", required: true, nullable: false
-    },
-};
-
-export const UpdateVentaDTO = {
-    carga_impositiva: {
-        type: "number"
-    },
-
-    estado: {
-        type: "boolean"
-    },
-
-    descuento: {
-        type: "number"
-    },
-};
-
-export const ResponseVentaDTO = {
-    id: {
-        type: "number"
-    },
-
-    total: {
-        type: "number"
-    },
-
-    subtotal: {
-        type: "number"
-    },
-
-    fecha: {
-        type: "Date"
-    },
-
-    carga_impositiva: {
-        type: "number"
-    },
-
-    ident_fatura: {
-        type: "number"
-    },
-
-    estado: {
-        type: "boolean"
-    },
-
-    descuento: {
-        type: "number"
-    },
-};
+    negocioId: Joi.number().allow(null).optional()
+}).min(1);

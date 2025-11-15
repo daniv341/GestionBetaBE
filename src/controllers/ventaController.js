@@ -1,6 +1,6 @@
 import * as ventaServices from "../services/ventaServices.js";
 import { CreateVentaDTO, UpdateVentaDTO } from "../models/venta.js";
-import { validarDTO, ident_FacturaExistente } from "../services/ventaServices.js";
+import prisma from "../config/db.js";
 
 const getAllVentas = async (req, res) => {
     try {
@@ -35,11 +35,17 @@ const createVenta = async (req, res) => {
     try {
         const data = req.body;
 
-        validarDTO(data, CreateVentaDTO);
+        //validar DTO
+        const { error } = CreateVentaDTO.validate(data)
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
 
-        const errorident_facturaExistente = await ident_FacturaExistente(data);
-
-        if (errorident_facturaExistente) {
+        //verificar idet_factura existente
+        const ident_facturaExistente = await prisma.Venta.findUnique({
+            where: { ident_factura: data.ident_factura },
+        });
+        if (ident_facturaExistente) {
             return res.status(400).json({ error: `A venta with ident_Factura "${data.ident_Factura}" already exists` });
         }
 
@@ -56,17 +62,24 @@ const updateVenta = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
 
+        //verificar id existente
         if (isNaN(id)) {
             return res.status(400).json({ error: "Invalid venta ID" });
         }
 
         const data = req.body;
 
-        validarDTO(data, UpdateVentaDTO);
+        //verificar DTO
+        const { error } = UpdateVentaDTO.validate(data)
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
 
-        const errorident_facturaExistente = await ident_FacturaExistente(data);
-
-        if (errorident_facturaExistente) {
+        //verificar idet_factura existente
+        const ident_facturaExistente = await prisma.Venta.findUnique({
+            where: { ident_factura: data.ident_factura },
+        });
+        if (ident_facturaExistente) {
             return res.status(400).json({ error: `A venta with ident_Factura "${data.ident_Factura}" already exists` });
         }
 
@@ -86,18 +99,18 @@ const updateVenta = async (req, res) => {
 
 const deleteVenta = async (req, res) => {
     try {
-      const id = parseInt(req.params.id);
+        const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return res.status(400).json({ error: "Invalid venta ID" });
-      }
+        if (isNaN(id)) {
+            return res.status(400).json({ error: "Invalid venta ID" });
+        }
 
-      await ventaServices.deleteVenta(id);
-      return res.status(204).send();
+        await ventaServices.deleteVenta(id);
+        return res.status(204).send();
 
     } catch (error) {
-      console.error("Error deleting venta:", error);
-      return res.status(500).json({ error: error.message });
+        console.error("Error deleting venta:", error);
+        return res.status(500).json({ error: error.message });
     }
 };
 

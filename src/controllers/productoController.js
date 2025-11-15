@@ -1,6 +1,6 @@
 import * as productoServices from "../services/productoServices.js";
 import { CreateProductoDTO, UpdateProductoDTO } from "../models/producto.js";
-import { validarDTO, SKUExistente } from "../services/productoServices.js";
+import prisma from "../config/db.js";
 
 const getAllProductos = async (req, res) => {
     try {
@@ -35,11 +35,17 @@ const createProducto = async (req, res) => {
     try {
         const data = req.body;
 
-        validarDTO(data, CreateProductoDTO);
+        //validar DTO
+        const { error } = CreateProductoDTO.validate(data)
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
 
-        const errorSKUExistente = await SKUExistente(data);
-
-        if (errorSKUExistente) {
+        //verificar SKU existente
+        const SKUExistente = await prisma.Producto.findUnique({
+            where: { SKU: data.SKU },
+        });
+        if (SKUExistente) {
             return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
         }
 
@@ -62,12 +68,18 @@ const updateProducto = async (req, res) => {
 
         const data = req.body;
 
-        validarDTO(data, UpdateProductoDTO);
+        //validar DTO
+        const { error } = UpdateProductoDTO.validate(data)
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
 
-        const errorSKUExistente = await SKUExistente(data);
-
-        if (errorSKUExistente) {
-            return res.status(400).json({ error: `A product with SKU "${data.SKU}" already exists` });
+        //verificar SKU existente
+        const SKUExistente = await prisma.Producto.findUnique({
+            where: { SKU: data.SKU },
+        });
+        if (SKUExistente) {
+            return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
         }
 
         const producto = await productoServices.updateProducto(id, data);
