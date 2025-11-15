@@ -9,7 +9,7 @@ export const CreateProductoDTO = Joi.object({
     SKU: Joi.string().strict().required(),
     stock_actual: Joi.number().strict().positive().required(),
     stock_minimo: Joi.number().strict().positive().required(),
-    enable: Joi.boolean().strict().required().default(true),
+    enable: Joi.boolean().strict().default(true),
 
     inventarioId: Joi.number().allow(null)
 });
@@ -23,7 +23,7 @@ export const UpdateProductoDTO = Joi.object({
     SKU: Joi.string().strict(),
     stock_actual: Joi.number().strict().positive(),
     stock_minimo: Joi.number().strict().positive().optional(),
-    enable: Joi.boolean().strict().default(true).optional(),
+    enable: Joi.boolean().strict().default(true),
     
     inventarioId: Joi.number().allow(null).optional()
 }).min(1);

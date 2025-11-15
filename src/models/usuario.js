@@ -1,22 +1,26 @@
-module.exports = {
-    nombre: {
-        type: "string",
-        nullable: false
-    },
+import Joi from "joi"
 
-    contraseña: {
-        type: "string",
-        nullable: false
-    },
+export const CreateUsuarioDTO = Joi.object({
+    nombre: Joi.string().strict().required(),
+    email: Joi.email().required(),
+    contraseña: Joi.string().strict().required(),
+    enable: Joi.boolean().strict().default(true),
+    direccion: Joi.string().strict().required(),
 
-    enable: {
-        type: "boolean",
-        nullable: false,
-        default: true
-    },
+    negocioId: Joi.number().allow(null)
+});
 
-    direccion: {
-        type: "string",
-        nullable: false
-    },
-};
+export const AuthentcateUsuarioDTO = Joi.object({
+    email: Joi.email().required(),
+    contraseña: Joi.string().strict().required()
+});
+
+export const UpdateUsuarioDTO = Joi.object({
+    nombre: Joi.string().strict().optional(),
+    email: Joi.email(),
+    contraseña: Joi.string().strict().required(),
+    enable: Joi.boolean().strict().default(true).optional(),
+    direccion: Joi.string().strict().optional(),
+
+    negocioId: Joi.number().allow(null)
+});
