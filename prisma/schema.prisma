@@ -32,8 +32,8 @@ model Usuario{
   direccion         String
 
   //relacion con negocio
-  negocioId         Int           @unique
-  negocio           Negocio       @relation(fields: [negocioId],references: [id])
+  negocioId         Int?           @unique
+  negocio           Negocio?       @relation(fields: [negocioId],references: [id])
 }
 
 model Inventario{

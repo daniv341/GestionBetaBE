@@ -1,8 +1,10 @@
 {
   "scripts": {
+    "name": "Gestion Beta Backend",
+    "version": "1.0.0",
+    "description": "Este repositorio alberga el Backend del Proyecto Gestion Beta",
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",

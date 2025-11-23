@@ -19,9 +19,14 @@ app.use(morgan("dev"));
 // Rutas
 //app.use("/api", routes); // importante: 'routes' debe ser un router válido
 
+//rutas para productos
 app.use("/api/v1/productos", productoRoutes);
+
+//rutas para ventas
 app.use("/api/v1/ventas", ventaRoutes);
-app.use("/api/v1/usuarios",usuarioRoutes);
+
+//rutas para usuarios
+app.use("/api/v1/usuarios", usuarioRoutes);
 
 app.listen(3000, () => {
     console.log("Servidor corriendo en http://localhost:3000");
