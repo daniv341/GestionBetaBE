@@ -6,7 +6,7 @@ export const CreateVentaDTO = Joi.object({
     fecha: Joi.date().iso().strict().required(),
     carga_impositiva: Joi.number().strict().positive().required(),
     ident_factura: Joi.number().strict().positive().required(),
-    estado: Joi.boolean().strict().required().default(true),
+    estado: Joi.boolean().strict().default(true),
     descuento: Joi.number().strict().positive().required(),
 
     negocioId: Joi.number().allow(null)
@@ -21,5 +21,5 @@ export const UpdateVentaDTO = Joi.object({
     estado: Joi.boolean().strict().default(true),
     descuento: Joi.number().strict().positive(),
 
-    negocioId: Joi.number().allow(null).optional()
+    negocioId: Joi.number().allow(null)
 }).min(1);

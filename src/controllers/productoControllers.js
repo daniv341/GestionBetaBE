@@ -1,5 +1,5 @@
-import * as productoServices from "../services/producto.services.js";
-import { CreateProductoDTO, UpdateProductoDTO } from "../models/producto.model.js";
+import * as productoServices from "../services/productoServices.js";
+import { CreateProductoDTO, UpdateProductoDTO } from "../models/productoModel.js";
 import prisma from "../config/db.js";
 
 const getAllProductos = async (req, res) => {

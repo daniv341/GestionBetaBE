@@ -2,13 +2,16 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import routes from "./routes/index.js"; // importa tu router principal
+import bodyParser from "body-parser";
 
-import productoRoutes from "./routes/producto.routes.js";
-import ventaRoutes from "./routes/venta.routes.js";
+import productoRoutes from "./routes/productoRoutes.js";
+import ventaRoutes from "./routes/ventaRoutes.js";
+import usuarioRoutes from "./routes/usuarioRoutes.js"
 
 const app = express();
 
 // Middlewares
+app.use(bodyParser.json())
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
@@ -21,6 +24,9 @@ app.use("/api/v1/productos", productoRoutes);
 
 //rutas para ventas
 app.use("/api/v1/ventas", ventaRoutes);
+
+//rutas para usuarios
+app.use("/api/v1/usuarios", usuarioRoutes);
 
 app.listen(3000, () => {
     console.log("Servidor corriendo en http://localhost:3000");
