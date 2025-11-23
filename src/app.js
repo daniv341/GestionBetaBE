@@ -3,8 +3,8 @@ import morgan from "morgan";
 import cors from "cors";
 import routes from "./routes/index.js"; // importa tu router principal
 
-import productoRoutes from "./routes/productoRoutes.js";
-import ventaRoutes from "./routes/ventaRoutes.js";
+import productoRoutes from "./routes/producto.routes.js";
+import ventaRoutes from "./routes/venta.routes.js";
 
 const app = express();
 
@@ -16,7 +16,10 @@ app.use(morgan("dev"));
 // Rutas
 //app.use("/api", routes); // importante: 'routes' debe ser un router válido
 
+//rutas para productos
 app.use("/api/v1/productos", productoRoutes);
+
+//rutas para ventas
 app.use("/api/v1/ventas", ventaRoutes);
 
 app.listen(3000, () => {

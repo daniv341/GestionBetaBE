@@ -1,5 +1,5 @@
-import * as ventaServices from "../services/ventaServices.js";
-import { CreateVentaDTO, UpdateVentaDTO } from "../models/venta.js";
+import * as ventaServices from "../services/venta.services.js";
+import { CreateVentaDTO, UpdateVentaDTO } from "../models/venta.model.js";
 import prisma from "../config/db.js";
 
 const getAllVentas = async (req, res) => {
