@@ -49,6 +49,14 @@ const registerUsuario = async (req, res) => {
             return { error: `A usuario with nombre "${data.nombre}" already exists` };
         }
 
+        //verificar email existente
+        const emailExistente = await prisma.Usuario.findUnique({
+            where: { email: data.email },
+        });
+        if (emailExistente) {
+            return res.status(400).json({ error: `A usuario with email "${data.email}" already exists` });
+        }
+
         const usuario = await usuarioServices.registerUsuario(data);
         return res.status(201).json(usuario);
 
@@ -104,7 +112,15 @@ const updateUsuario = async (req, res) => {
             where: { nombre: data.nombre },
         });
         if (nombreExistente) {
-            return res.status(400).json({ error: `A usuario with ident_Factura "${data.ident_Factura}" already exists` });
+            return res.status(400).json({ error: `A usuario with nombre "${data.nombre}" already exists` });
+        }
+
+        //verificar email existente
+        const emailExistente = await prisma.Usuario.findUnique({
+            where: { email: data.email },
+        });
+        if (emailExistente) {
+            return res.status(400).json({ error: `A usuario with email "${data.email}" already exists` });
         }
 
         const usuario = await usuarioServices.updateUsuario(id, data);

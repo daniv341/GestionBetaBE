@@ -20,20 +20,21 @@ model Producto{
   enable              Boolean     @default(true)
 
   //relacion con inventario
-  inventarioId        Int?         @unique
-  inventario          Inventario?  @relation(fields: [inventarioId],references: [id])
+  inventarioId        Int?        @unique
+  inventario          Inventario? @relation(fields: [inventarioId],references: [id])
 }
 
 model Usuario{
-  id                Int           @id @default(autoincrement())
+  uid               String        @id @default(cuid())
+  email             String        @unique
   nombre            String        @unique
   contraseña        String    
   enable            Boolean       @default(true)
   direccion         String
 
   //relacion con negocio
-  negocioId         Int?           @unique
-  negocio           Negocio?       @relation(fields: [negocioId],references: [id])
+  negocioId         Int?          @unique
+  negocio           Negocio?      @relation(fields: [negocioId],references: [id])
 }
 
 model Inventario{
@@ -43,8 +44,8 @@ model Inventario{
   productos         Producto[]
 
   //relacion con negocio
-  negocioId      Int              @unique
-  negocio        Negocio          @relation(fields: [negocioId],references: [id])
+  negocioId      Int?             @unique
+  negocio        Negocio?         @relation(fields: [negocioId],references: [id])
 }
 
 model Negocio{
@@ -69,8 +70,8 @@ model Proveedor{
   compras           Compra[]
 
   //relacion con negocio
-  negocioId         Int           @unique
-  negocio           Negocio       @relation(fields: [negocioId],references: [id])
+  negocioId         Int?          @unique
+  negocio           Negocio?      @relation(fields: [negocioId],references: [id])
 }
 
 model Venta{
@@ -86,8 +87,8 @@ model Venta{
   factura           Factura?
 
   //relacion con negocio
-  negocioId         Int?           @unique
-  negocio           Negocio?       @relation(fields: [negocioId],references: [id])
+  negocioId         Int?          @unique
+  negocio           Negocio?      @relation(fields: [negocioId],references: [id])
 }
 
 model Factura{
@@ -97,8 +98,8 @@ model Factura{
   fecha_vencimiento DateTime
 
   //relacion con venta
-  ventaId           Int           @unique
-  venta             Venta         @relation(fields: [ventaId],references: [id])
+  ventaId           Int?          @unique
+  venta             Venta?        @relation(fields: [ventaId],references: [id])
 }
 
 model Compra{
@@ -109,7 +110,7 @@ model Compra{
   estado            Boolean       @default(true)
 
   //relacion con proveedor
-  proveedorId       Int           @unique
-  proveedor         Proveedor     @relation(fields: [proveedorId],references: [id])
+  proveedorId       Int?          @unique
+  proveedor         Proveedor?    @relation(fields: [proveedorId],references: [id])
 }
 

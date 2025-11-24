@@ -28,7 +28,7 @@ const registerUsuario = async (data) => {
 
 const loginUsuario = async (data) => {
     const usuario = await prisma.Usuario.findUnique({
-        where: { nombre: data.nombre },
+        where: { email: data.email },
     });
     if (!usuario) {
         return { error: `Invalid Credentials` };
@@ -41,23 +41,16 @@ const loginUsuario = async (data) => {
     }
 
     const token = jwt.sign(
-        { nombre: data.nombre },
+        { email: data.email },
         process.env.JWT_SECRET,
         { expiresIn: "2h" }
       );
 
-    return {token, data}
+    return {token}
 };
 
 const updateUsuario = async (id, data) => {
     const { contraseña } = data;
-
-    const nombreExistente = await prisma.Usuario.findUnique({
-        where: { nombre: data.nombre },
-    });
-    if (nombreExistente) {
-        return res.status(400).json({ error: `A usuario with nombre "${data.nombre}" already exists` });
-    }
 
     const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
 

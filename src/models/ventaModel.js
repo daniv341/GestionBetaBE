@@ -3,7 +3,7 @@ import Joi from "joi"
 export const CreateVentaDTO = Joi.object({
     total: Joi.number().strict().positive().required(),
     subtotal: Joi.number().strict().positive().required(),
-    fecha: Joi.date().iso().strict().required(),
+    fecha: Joi.date().iso().required(),
     carga_impositiva: Joi.number().strict().positive().required(),
     ident_factura: Joi.number().strict().positive().required(),
     estado: Joi.boolean().strict().default(true),
@@ -15,7 +15,7 @@ export const CreateVentaDTO = Joi.object({
 export const UpdateVentaDTO = Joi.object({
     total: Joi.number().strict().positive().optional(),
     subtotal: Joi.number().strict().positive().optional(),
-    fecha: Joi.date().iso().strict().optional(),
+    fecha: Joi.date().iso().optional(),
     carga_impositiva: Joi.number().strict().positive().optional(),
     ident_factura: Joi.number().strict().positive().optional(),
     estado: Joi.boolean().strict().default(true),
