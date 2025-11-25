@@ -28,7 +28,9 @@ app.use("/api/v1/ventas", ventaRoutes);
 
 //rutas para usuarios
 app.use("/api/v1/usuarios", usuarioRoutes);
-app.use("/api/v1/usuarios", oauthRoutes);
+
+//rutas para usuarios oauth
+app.use("/api/v1/oauth", oauthRoutes);
 
 app.listen(3000, () => {
     console.log("Servidor corriendo en http://localhost:3000");

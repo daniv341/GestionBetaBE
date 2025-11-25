@@ -26,11 +26,11 @@ const getGoogleAuthURL = async () => {
     return authorizationUri;
 };
 
-const handleGoogleCallback = async (data) => {
+const handleGoogleCallback = async (code) => {
     const redirect_uri = process.env.GOOGLE_REDIRECT_URI;
 
     // intercambia el code por un token
-    const tokenParams = { data, redirect_uri };
+    const tokenParams = { code, redirect_uri };
     const accessToken = await client.getToken(tokenParams);
 
     // obtiene la info del usuario del mail que pusiste desde Google
@@ -41,18 +41,25 @@ const handleGoogleCallback = async (data) => {
         }
     ).then(res => res.json());
 
-    const { subGoogle, nameGoogle, emailGoogle } = infoUsuario;
+    const { sub, name, email, picture } = infoUsuario;
 
-    prisma.Usuario.create({
-        data: {
-            uid: subGoogle,
-            nombre: nameGoogle,
-            email: emailGoogle,
-        }
+    let user = await prisma.usuarioOAuth.findUnique({
+        where: { email }
     });
 
+    if (!user) {
+        user = await prisma.usuarioOAuth.create({
+            data: {
+                uid: sub,
+                nombre: name,
+                email,
+                foto: picture,
+            }
+        });
+    }
+
     const token = jwt.sign(
-        { uid: data.uid, email: data.email },
+        { email: user.email },
         process.env.JWT_SECRET,
         { expiresIn: "2h" }
       );
