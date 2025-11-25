@@ -1,12 +1,13 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import routes from "./routes/index.js"; // importa tu router principal
+//import routes from "./routes/index.js"; // importa tu router principal
 import bodyParser from "body-parser";
 
 import productoRoutes from "./routes/productoRoutes.js";
 import ventaRoutes from "./routes/ventaRoutes.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js"
+import oauthRoutes from "./routes/oauthRoutes.js"
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/v1/ventas", ventaRoutes);
 
 //rutas para usuarios
 app.use("/api/v1/usuarios", usuarioRoutes);
+app.use("/api/v1/usuarios", oauthRoutes);
 
 app.listen(3000, () => {
     console.log("Servidor corriendo en http://localhost:3000");

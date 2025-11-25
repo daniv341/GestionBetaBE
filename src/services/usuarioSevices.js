@@ -34,14 +34,15 @@ const loginUsuario = async (data) => {
         return { error: `Invalid Credentials` };
     }
 
-    //el primer parametro es la contraseña ue viene del body y la segunda la contraseña de la bd
+    // el primer parametro es la contraseña ue viene del body y la segunda la contraseña de la bd
     const contraseñaCorrecta = await bcrypt.compare(data.contraseña, usuario.contraseña);
     if (!contraseñaCorrecta) {
         return { error: `Invalid Credentials` };
     }
 
+    // genera el token utilizando como base JWT_SECRET
     const token = jwt.sign(
-        { email: data.email },
+        { uid: data.uid, email: data.email },
         process.env.JWT_SECRET,
         { expiresIn: "2h" }
       );
