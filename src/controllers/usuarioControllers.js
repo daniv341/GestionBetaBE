@@ -2,6 +2,18 @@ import * as usuarioServices from "../services/usuarioSevices.js";
 import { CreateUsuarioDTO, LoginUsuarioDTO, UpdateUsuarioDTO } from "../models/usuarioModel.js";
 import prisma from "../config/db.js";
 
+const getAllSystemUsuarios = async (req, res) => {
+    try {
+        const { usuarios, usuariosOauth } = await usuarioServices.getAllSystemUsuarios();
+        const systemUsuarios = { usuarios, usuariosOauth };
+
+        res.status(201).json({ usuarios, usuariosOauth });
+    } catch (error) {
+        console.error("Error getting system usuarios:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 const getAllUsuarios = async (req, res) => {
     try {
         const usuarios = await usuarioServices.getAllUsuarios();
@@ -124,9 +136,9 @@ const updateUsuario = async (req, res) => {
 
 const deleteUsuario = async (req, res) => {
     try {
-        const uid = parseInt(req.params.uid);
+        const uid = String(req.params.uid);
 
-        if (isNaN(uid)) {
+        if (!typeof uid == "string") {
             return res.status(400).json({ error: "Invalid Usuario UID" });
         }
 
@@ -140,6 +152,7 @@ const deleteUsuario = async (req, res) => {
 };
 
 export {
+    getAllSystemUsuarios,
     getAllUsuarios,
     getUsuarioById,
     registerUsuario,

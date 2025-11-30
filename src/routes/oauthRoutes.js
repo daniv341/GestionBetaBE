@@ -3,7 +3,6 @@ import * as oauthControllers from "../controllers/oauthControllers.js";
 
 const router = express.Router();
 
-console.log("soy el routes de redirect");
 // GET /api/v1/oauth/google - inicia el login con Google
 router.get("/google", oauthControllers.getGoogleRedirect);
 
@@ -18,5 +17,8 @@ router.get("/:uid", oauthControllers.getUsuarioOauthByUid);
 
 // PUT /api/v1/oauth/:uid - actualizar un usuario mediante el uid
 router.put("/:uid", oauthControllers.updateUsuarioOauth);
+
+// DELETE /api/v1/oauth/:uid - eliminar un usuario mediante el uid
+router.delete("/:uid", oauthControllers.deleteUsuarioOauth);
 
 export default router;

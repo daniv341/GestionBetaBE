@@ -88,8 +88,24 @@ const updateUsuarioOauth = async (req, res) => {
         console.error("Error updating Usuario:", error);
         res.status(500).json({ error: "Internal server error" });
     }
+};
 
+const deleteUsuarioOauth = async (req, res) => {
+    try {
+        const uid = String(req.params.uid);
 
+        if (!typeof uid == "string") {
+            return res.status(400).json({ error: "Invalid UID" })
+        }
+        console.log(uid);
+
+        await oauthServices.deleteUsuarioOauth(uid);
+
+        return res.status(204).send();
+    } catch (error) {
+        console.error("Error deleting Usuario:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
 };
 
 export {
@@ -97,5 +113,6 @@ export {
     getGoogleCallback,
     getAllUsuariosOauth,
     getUsuarioOauthByUid,
-    updateUsuarioOauth
+    updateUsuarioOauth,
+    deleteUsuarioOauth
 };

@@ -81,12 +81,19 @@ const updateUsuarioOauth = async (uid, data) => {
         where: { uid : uid },
         data
     });
-}
+};
+
+const deleteUsuarioOauth = async (uid) => {
+    return prisma.UsuarioOAuth.delete({
+        where: { uid: uid }
+    });
+};
 
 export {
     getGoogleAuthURL,
     handleGoogleCallback,
     getAllUsuariosOauth,
     getUsuarioOauthByUid,
-    updateUsuarioOauth
+    updateUsuarioOauth,
+    deleteUsuarioOauth
 };

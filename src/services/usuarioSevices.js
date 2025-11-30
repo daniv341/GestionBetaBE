@@ -3,6 +3,13 @@ import jwt from "jsonwebtoken";
 import prisma from "../config/db.js";
 import "dotenv/config";
 
+const getAllSystemUsuarios = async () => {
+    const usuarios = await prisma.Usuario.findMany();
+    const usuariosOauth = await prisma.usuarioOAuth.findMany();
+
+    return { usuarios, usuariosOauth };
+};
+
 const getAllUsuarios = async () => {
     return prisma.Usuario.findMany();
 };
@@ -74,6 +81,7 @@ const deleteUsuario = async (uid) => {
 };
 
 export {
+    getAllSystemUsuarios,
     getAllUsuarios,
     getUsuarioById,
     registerUsuario,
