@@ -1,3 +1,4 @@
+import { UpdateUsuarioOauthDTO } from "../models/oauthModel.js";
 import * as oauthServices from "../services/oauthServices.js";
 
 const getGoogleRedirect = async (req, res) => {
@@ -40,8 +41,61 @@ const getAllUsuariosOauth = async (req, res) => {
     }
 };
 
+const getUsuarioOauthByUid = async (req, res) => {
+    try {
+        const uid = String(req.params.uid);
+
+        if (!typeof uid == "string") {
+            return res.status(400).json({ error: "Invalid UID" })
+        }
+
+        const usuario = await oauthServices.getUsuarioOauthByUid(uid);
+        if (!usuario) {
+            return res.status(404).json({ error: "Usuario not found" });
+        }
+
+        res.json(usuario);
+
+    } catch (error) {
+        console.error("Error getting Usuario:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+const updateUsuarioOauth = async (req, res) => {
+    try {
+        const uid = String(req.params.uid);
+
+        if (!typeof uid == "string") {
+            return res.status(400).json({ error: "Invalid UID" })
+        }
+
+        const data = req.body;
+
+        //validar DTO
+        const { error } = UpdateUsuarioOauthDTO.validate(data)
+        if(error) {
+            return res.status(400).json({ error:error.details[0].message });
+        }
+
+        const usuario = await oauthServices.updateUsuarioOauth(uid, data);
+        if (!usuario) {
+            return res.status(404).json({ error: "Usuario not found" });
+        }
+
+        res.json(usuario);
+    } catch (error) {
+        console.error("Error updating Usuario:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+
+
+};
+
 export {
     getGoogleRedirect,
     getGoogleCallback,
-    getAllUsuariosOauth
+    getAllUsuariosOauth,
+    getUsuarioOauthByUid,
+    updateUsuarioOauth
 };

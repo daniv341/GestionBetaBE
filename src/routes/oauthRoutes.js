@@ -4,13 +4,19 @@ import * as oauthControllers from "../controllers/oauthControllers.js";
 const router = express.Router();
 
 console.log("soy el routes de redirect");
-// GET /api/v1/usuario/google - inicia el login con Google
+// GET /api/v1/oauth/google - inicia el login con Google
 router.get("/google", oauthControllers.getGoogleRedirect);
 
-// GET /api/v1/usuario/googleCallback - lo que retorna Google luego de completado el login
+// GET /api/v1/oauth/googleCallback - lo que retorna Google luego de completado el login
 router.get("/googleCallback", oauthControllers.getGoogleCallback);
 
-// GET /api/v1/usuario/getAllUsuariosOauth - obtener todos los usuarios y sus parametros
-router.get("/getAllUsuariosOauth", oauthControllers.getAllUsuariosOauth);
+// GET /api/v1/oauth/getAllUsuariosOauth - obtener todos los usuarios y sus parametros
+router.get("/", oauthControllers.getAllUsuariosOauth);
+
+// GET /api/v1/oauth/:uid - obtener un usuario mediante el uid
+router.get("/:uid", oauthControllers.getUsuarioOauthByUid);
+
+// PUT /api/v1/oauth/:uid - actualizar un usuario mediante el uid
+router.put("/:uid", oauthControllers.updateUsuarioOauth);
 
 export default router;

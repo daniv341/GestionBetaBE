@@ -1,6 +1,6 @@
 import Joi from "joi"
 
-export const UpdateOauthDTO = Joi.object({
+export const UpdateUsuarioOauthDTO = Joi.object({
     direccion: Joi.string().strict().required(),
     enable: Joi.boolean().strict().default(true)
 });

@@ -70,8 +70,23 @@ const getAllUsuariosOauth = async () => {
     return prisma.UsuarioOAuth.findMany();
 };
 
+const getUsuarioOauthByUid = async (uid) => {
+    return prisma.UsuarioOAuth.findUnique({
+        where: { uid : uid}
+    });
+};
+
+const updateUsuarioOauth = async (uid, data) => {
+    return prisma.UsuarioOAuth.update({
+        where: { uid : uid },
+        data
+    });
+}
+
 export {
     getGoogleAuthURL,
     handleGoogleCallback,
-    getAllUsuariosOauth
+    getAllUsuariosOauth,
+    getUsuarioOauthByUid,
+    updateUsuarioOauth
 };

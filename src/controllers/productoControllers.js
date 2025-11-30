@@ -22,7 +22,6 @@ const getAllProductos = async (req, res) => {
 const getProductoById = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        console.log(req.params);
 
         if (isNaN(id)) {
             return res.status(400).json({ error: "Invalid producto ID" });
