@@ -7,11 +7,14 @@ const getAllUsuarios = async () => {
     return prisma.Usuario.findMany();
 };
 
-const getUsuarioById = async (id) => {
+const getUsuarioById = async (uid) => {
     return prisma.Usuario.findUnique({
-        where: { id }
+        where: { uid }
     });
 };
+
+// hash encripta la contraseña (o parametro) usando la sal (10)
+// ...data indica el resto de la estructura del objeto sin tener que esecificarlo
 
 const registerUsuario = async (data) => {
     const { contraseña } = data;
@@ -40,7 +43,7 @@ const loginUsuario = async (data) => {
         return { error: `Invalid Credentials` };
     }
 
-    // genera el token utilizando como base JWT_SECRET
+    // genera el token utilizando como base JWT_SECRET que esta en .env
     const token = jwt.sign(
         { uid: data.uid, email: data.email },
         process.env.JWT_SECRET,
@@ -50,22 +53,23 @@ const loginUsuario = async (data) => {
     return {token}
 };
 
-const updateUsuario = async (id, data) => {
+const updateUsuario = async (uid, data) => {
     const { contraseña } = data;
 
     const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
 
-    return prisma.Usuario.create({
-        where: { id: id },
+    return prisma.Usuario.update({
+        where: { uid: uid },
         data: {
+            ...data,
             contraseña: contraseñaHasheada,
         }
     });
 };
 
-const deleteUsuario = async (id) => {
+const deleteUsuario = async (uid) => {
     return prisma.Usuario.delete({
-        where: { id: id }
+        where: { uid: uid }
     });
 };
 

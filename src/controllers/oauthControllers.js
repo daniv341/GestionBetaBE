@@ -30,7 +30,18 @@ const getGoogleCallback = async (req, res) => {
     }
 };
 
+const getAllUsuariosOauth = async (req, res) => {
+    try {
+        const usuarios = await oauthServices.getAllUsuariosOauth();
+        res.json(usuarios);
+    } catch (error) {
+        console.error("Error getting usuarios:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 export {
     getGoogleRedirect,
-    getGoogleCallback
+    getGoogleCallback,
+    getAllUsuariosOauth
 };

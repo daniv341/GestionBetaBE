@@ -53,7 +53,6 @@ const handleGoogleCallback = async (code) => {
                 uid: sub,
                 nombre: name,
                 email,
-                foto: picture,
             }
         });
     }
@@ -64,10 +63,15 @@ const handleGoogleCallback = async (code) => {
         { expiresIn: "2h" }
       );
 
-    return {token}
+    return {token,user}
+};
+
+const getAllUsuariosOauth = async () => {
+    return prisma.UsuarioOAuth.findMany();
 };
 
 export {
     getGoogleAuthURL,
-    handleGoogleCallback
+    handleGoogleCallback,
+    getAllUsuariosOauth
 };

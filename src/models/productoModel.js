@@ -1,5 +1,15 @@
 import Joi from "joi"
 
+// dto significa Data Transfer Object, sirve para definir que estrutura tendran los datos
+// strict sirve para obligar a que el parametro sea del tipo que especifica
+// required sirve para obligar que el parametro tenga que ser enviado
+// optional sirve para dar la opcion de que el parametro pueda o no ser enviado
+// positive para que el numero sea positivo
+// default sirve para oder indicar un valor por defecto en caso de que no se envie
+// allow(null) permite que el parametro sea null, recuerda que la bd tambien lo debe permitir
+// min(1) sirve para que en caso de que el usuario envie un JSON vacio no salte un error
+// export indica que el metodo sera exportado para poder ser usado en otro lado
+
 export const CreateProductoDTO = Joi.object({
     nombre: Joi.string().strict().required(),
     descripcion: Joi.string().strict().required(),

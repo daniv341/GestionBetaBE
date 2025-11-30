@@ -1,5 +1,11 @@
 import prisma from "../config/db.js";
 
+// async hace que una funcion sea asincrona, es decir que no detenga la ejecucion hasta que su contenido haya sido ejecutado
+// findMany es de prisma, trae todos las filas correspondientes de la tabla con todas sus columnas
+// findUnique es de prisma, busca a una unica entidad dado el parametro que especifiques, una vez encontrado trae todos los demas parametros de dicha fila
+// create es de prisma, sirve para crear la fila en la base de datos
+// update es de prisma, actualiza la fila en la base de datos segun los datos actualizados(y que se pueden actualizar)
+// delete es de prisma, elimina la columna en la base de datos
 const getAllProductos = async () => {
   return prisma.Producto.findMany();
 };

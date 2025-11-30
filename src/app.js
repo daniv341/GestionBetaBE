@@ -11,13 +11,13 @@ import oauthRoutes from "./routes/oauthRoutes.js"
 
 const app = express();
 
-// Middlewares
+// middlewares
 app.use(bodyParser.json())
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// Rutas
+// rutas
 //app.use("/api", routes); // importante: 'routes' debe ser un router válido
 
 //rutas para productos
@@ -37,5 +37,4 @@ app.listen(3000, () => {
 });
 
 export default app;
-
 

@@ -14,12 +14,13 @@ const getAllUsuarios = async (req, res) => {
 
 const getUsuarioById = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            return res.status(400).json({ error: "Invalid usuario ID" });
+        const uid = String(req.params.uid);
+
+        if (!typeof uid == 'string') {
+            return res.status(400).json({ error: "Invalid usuario UID" });
         }
 
-        const usuario = await usuarioServices.getUsuarioById(id);
+        const usuario = await usuarioServices.getUsuarioById(uid);
         if (!usuario) {
             return res.status(404).json({ error: "Usuario not found" });
         }
@@ -78,7 +79,7 @@ const loginUsuario = async (req, res) => {
 
         const usuario = await usuarioServices.loginUsuario(data);
 
-        // enviar token al header
+        // enviar token al header, no funciona xd pero lo dejo por las dudas
         res.setHeader("Authorization", `Bearer ${data.token}`);
 
         return res.status(201).json(usuario);
@@ -92,11 +93,11 @@ const loginUsuario = async (req, res) => {
 
 const updateUsuario = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const uid = String(req.params.uid);
 
-        //verificar id existente
-        if (isNaN(id)) {
-            return res.status(400).json({ error: "Invalid usuario ID" });
+        //verificar uid existente
+        if (!typeof uid == 'string') {
+            return res.status(400).json({ error: "Invalid usuario UID" });
         }
 
         const data = req.body;
@@ -107,23 +108,7 @@ const updateUsuario = async (req, res) => {
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        //verificar nombre existente
-        const nombreExistente = await prisma.Usuario.findUnique({
-            where: { nombre: data.nombre },
-        });
-        if (nombreExistente) {
-            return res.status(400).json({ error: `A usuario with nombre "${data.nombre}" already exists` });
-        }
-
-        //verificar email existente
-        const emailExistente = await prisma.Usuario.findUnique({
-            where: { email: data.email },
-        });
-        if (emailExistente) {
-            return res.status(400).json({ error: `A usuario with email "${data.email}" already exists` });
-        }
-
-        const usuario = await usuarioServices.updateUsuario(id, data);
+        const usuario = await usuarioServices.updateUsuario(uid, data);
 
         if (!usuario) {
             return res.status(404).json({ error: "Usuario not found" });
@@ -139,13 +124,13 @@ const updateUsuario = async (req, res) => {
 
 const deleteUsuario = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const uid = parseInt(req.params.uid);
 
-        if (isNaN(id)) {
-            return res.status(400).json({ error: "Invalid Usuario ID" });
+        if (isNaN(uid)) {
+            return res.status(400).json({ error: "Invalid Usuario UID" });
         }
 
-        await usuarioServices.deleteUsuario(id);
+        await usuarioServices.deleteUsuario(uid);
         return res.status(204).send();
 
     } catch (error) {

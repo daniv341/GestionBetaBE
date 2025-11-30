@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 
+// headers contiene los datos del encabezado de la peticion http
+
 const verificarToken = (req, res, next) => {
     try {
         const header = req.headers["authorization"];

@@ -2,10 +2,25 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// npx prisma generate - genera el cliente prisma, debes usar el comando despues de aplicar una migracion
+// npx prisma migrate dev -- name "nombre_de_la_migracion" - realiza la migracion de la base de datos y le pone el nombre que especifiques
+// una migracion se refiere a un cambio que le hiciste a la estructura de la base de datos
+
+// provider indica quien es el proveedor de la base de datos o del cliente(dependiendo para que lo uses)
+// url indica la url para poder dirigirte a la base de datos, es esencial, sin ella no puede operar la bd
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// id indica que ese parametro sera el id de la tabla
+// unique indica que el mismo debe ser unico o no puede repetirse
+// default indica como sera dicho parametro por defecto
+// autoincrement indica que dicho parametro sera autoincremental
+// cuid es para indicar que el id sera un id unico
+// ? indica que la relacion es opcional, es decir puede ser nula o opcional mejor dicho
+// relation indica que hay una relacion entre 2 tablas
 
 model Producto{
   id                  Int         @id @default(autoincrement())
@@ -19,7 +34,7 @@ model Producto{
   stock_minimo        Int
   enable              Boolean     @default(true)
 
-  //relacion con inventario
+  //relacion con inventario, indica que la clave foranea (inventarioId) se relacionara con la otra tabla (Inventario) usando como referencia el id de la tabla padra (Inventario)
   inventarioId        Int?        @unique
   inventario          Inventario? @relation(fields: [inventarioId],references: [id])
 }
@@ -39,12 +54,11 @@ model Usuario{
 
 model UsuarioOAuth {
   uid               String        @id @default(cuid())
-  provider          String?
-  providerId        String?
   email             String        @unique
   nombre            String?
   foto              String?
-  fechaCreacion     DateTime      @default(now())
+  enable            Boolean       @default(true)
+  direccion         String?
 
   //relacion con negocio
   negocioId         Int?          @unique

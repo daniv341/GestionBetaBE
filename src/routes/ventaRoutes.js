@@ -2,6 +2,11 @@ import express from "express";
 import { verificarToken } from "../middleware/verificarToken.js";
 import * as ventaControllers from "../controllers/ventaControllers.js";
 
+// get es una peticion para obtener datos de algo en especifico
+// post es una peticion para crear datos de algo en especifico
+// put es una peticion para actualizar datos de algo en especifico(que ya fue creado)
+// delete es una peticion para eliminar datos de algo en especifico
+
 const router = express.Router();
 
 // GET /api/v1/ventas - obtener todas las ventas y sus parametros
