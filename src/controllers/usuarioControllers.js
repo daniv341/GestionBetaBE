@@ -3,18 +3,6 @@ import { CreateUsuarioDTO, LoginUsuarioDTO, UpdateUsuarioDTO } from "../models/u
 import prisma from "../config/db.js";
 import * as logoutServices from "../services/logoutServices.js"
 
-const getAllSystemUsuarios = async (req, res) => {
-    try {
-        const { usuarios, usuariosOauth } = await usuarioServices.getAllSystemUsuarios();
-        const systemUsuarios = { usuarios, usuariosOauth };
-
-        res.status(201).json({ usuarios, usuariosOauth });
-    } catch (error) {
-        console.error("Error getting system usuarios:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-};
-
 const getAllUsuarios = async (req, res) => {
     try {
         const usuarios = await usuarioServices.getAllUsuarios();
@@ -53,14 +41,6 @@ const registerUsuario = async (req, res) => {
         const { error } = CreateUsuarioDTO.validate(data)
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
-        }
-
-        //verificar nombre existente
-        const nombreExistente = await prisma.Usuario.findUnique({
-            where: { nombre: data.nombre },
-        });
-        if (nombreExistente) {
-            return { error: `A usuario with nombre "${data.nombre}" already exists` };
         }
 
         //verificar email existente
@@ -114,11 +94,6 @@ const updateUsuario = async (req, res) => {
     try {
         const uid = String(req.params.uid);
 
-        //verificar uid existente
-        if (!typeof uid == 'string') {
-            return res.status(400).json({ error: "Invalid usuario UID" });
-        }
-
         const data = req.body;
 
         //verificar DTO
@@ -159,7 +134,6 @@ const deleteUsuario = async (req, res) => {
 };
 
 export {
-    getAllSystemUsuarios,
     getAllUsuarios,
     getUsuarioById,
     registerUsuario,

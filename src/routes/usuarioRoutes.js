@@ -1,12 +1,9 @@
 import express from "express";
-import * as usuarioControllers from "../controllers/usuarioControllers.js";
+import { verificarToken } from "../middleware/verificarToken.js";
 import { verificarBlacklist } from "../middleware/verificarBlacklist.js"
-import { verificarToken } from "../middleware/verificarToken.js"
+import * as usuarioControllers from "../controllers/usuarioControllers.js";
 
 const router = express.Router();
-
-// GET /api/v1/usuarios/systemUsuarios - obtener todos los usuarios del sistema y sus parametros
-router.get("/systemUsuarios", verificarToken, verificarBlacklist, usuarioControllers.getAllSystemUsuarios);
 
 // GET /api/v1/usuarios/ - obtener todos los usuarios y sus parametros
 router.get("/", usuarioControllers.getAllUsuarios);

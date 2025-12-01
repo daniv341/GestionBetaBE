@@ -1,5 +1,6 @@
 import express from "express";
 import { verificarToken } from "../middleware/verificarToken.js";
+import { verificarBlacklist } from "../middleware/verificarBlacklist.js"
 import * as ventaControllers from "../controllers/ventaControllers.js";
 
 // get es una peticion para obtener datos de algo en especifico

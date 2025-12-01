@@ -82,14 +82,6 @@ const updateProducto = async (req, res) => {
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        //verificar SKU existente
-        const SKUExistente = await prisma.Producto.findUnique({
-            where: { SKU: data.SKU },
-        });
-        if (SKUExistente) {
-            return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
-        }
-
         const producto = await productoServices.updateProducto(id, data);
 
         if (!producto) {

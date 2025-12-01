@@ -21,19 +21,18 @@ export const CreateProductoDTO = Joi.object({
     stock_minimo: Joi.number().strict().positive().required(),
     enable: Joi.boolean().strict().default(true),
 
-    inventarioId: Joi.number().allow(null)
+    usuarioId: Joi.string().allow(null)
 });
 
 export const UpdateProductoDTO = Joi.object({
     nombre: Joi.string().strict().optional(),
-    descripcion: Joi.string().strict(),
+    descripcion: Joi.string().strict().optional(),
     precio_venta: Joi.number().strict().positive().optional(),
     precio_compra: Joi.number().strict().positive().optional(),
     categoria: Joi.string().strict().optional(),
-    SKU: Joi.string().strict(),
     stock_actual: Joi.number().strict().positive(),
     stock_minimo: Joi.number().strict().positive().optional(),
     enable: Joi.boolean().strict().default(true),
     
-    inventarioId: Joi.number().allow(null).optional()
+    usuarioId: Joi.string().allow(null).optional()
 }).min(1);

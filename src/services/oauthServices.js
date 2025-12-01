@@ -43,16 +43,16 @@ const handleGoogleCallback = async (code) => {
 
     const { sub, name, email, picture } = infoUsuario;
 
-    let user = await prisma.usuarioOAuth.findUnique({
+    let user = await prisma.Usuario.findUnique({
         where: { email }
     });
 
     if (!user) {
-        user = await prisma.usuarioOAuth.create({
+        user = await prisma.Usuario.create({
             data: {
                 uid: sub,
                 nombre: name,
-                email,
+                email: email,
             }
         });
     }
@@ -63,37 +63,18 @@ const handleGoogleCallback = async (code) => {
         { expiresIn: "2h" }
       );
 
-    return {token,user}
-};
-
-const getAllUsuariosOauth = async () => {
-    return prisma.UsuarioOAuth.findMany();
-};
-
-const getUsuarioOauthByUid = async (uid) => {
-    return prisma.UsuarioOAuth.findUnique({
-        where: { uid : uid}
-    });
+    return {token}
 };
 
 const updateUsuarioOauth = async (uid, data) => {
-    return prisma.UsuarioOAuth.update({
+    return prisma.Usuario.update({
         where: { uid : uid },
         data
-    });
-};
-
-const deleteUsuarioOauth = async (uid) => {
-    return prisma.UsuarioOAuth.delete({
-        where: { uid: uid }
     });
 };
 
 export {
     getGoogleAuthURL,
     handleGoogleCallback,
-    getAllUsuariosOauth,
-    getUsuarioOauthByUid,
-    updateUsuarioOauth,
-    deleteUsuarioOauth
+    updateUsuarioOauth
 };

@@ -1,7 +1,7 @@
 import express from "express";
-import * as oauthControllers from "../controllers/oauthControllers.js";
+import { verificarToken } from "../middleware/verificarToken.js";
 import { verificarBlacklist } from "../middleware/verificarBlacklist.js"
-import { verificarToken } from "../middleware/verificarToken.js"
+import * as oauthControllers from "../controllers/oauthControllers.js";
 
 const router = express.Router();
 
@@ -14,16 +14,7 @@ router.get("/googleCallback", oauthControllers.getGoogleCallback);
 // POST /api/v1/oauth/logoutUserOauth - realiza el logout del usuario e invalida el token
 router.post("/logoutUserOauth", oauthControllers.logoutUserOauth);
 
-// GET /api/v1/oauth/ - obtener todos los usuarios y sus parametros
-router.get("/", verificarToken, verificarBlacklist, oauthControllers.getAllUsuariosOauth);
-
-// GET /api/v1/oauth/:uid - obtener un usuario mediante el uid
-router.get("/:uid", oauthControllers.getUsuarioOauthByUid);
-
 // PUT /api/v1/oauth/:uid - actualizar un usuario mediante el uid
 router.put("/:uid", oauthControllers.updateUsuarioOauth);
-
-// DELETE /api/v1/oauth/:uid - eliminar un usuario mediante el uid
-router.delete("/:uid", oauthControllers.deleteUsuarioOauth);
 
 export default router;

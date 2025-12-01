@@ -4,8 +4,8 @@ import Joi from "joi"
 // pattern sirve para indicar un patron segun una expresion logica, de lo contrario, envia un mensaje
 
 export const CreateUsuarioDTO = Joi.object({
-    nombre: Joi.string().strict().required(),
     email: Joi.string().email().strict().required(),
+    nombre: Joi.string().strict().required(),
     contraseña: Joi.string().strict().min(8)
         .pattern(/[A-Z]/, "a uppercase")
         .pattern(/[a-z]/, "a lowercase")
@@ -14,8 +14,8 @@ export const CreateUsuarioDTO = Joi.object({
         .required(),
     enable: Joi.boolean().strict().default(true),
     direccion: Joi.string().strict().required(),
-
-    negocioId: Joi.number().allow(null)
+    logo_negocio: Joi.string().strict().optional(),
+    nombre_negocio: Joi.string().strict().optional(),
 });
 
 export const LoginUsuarioDTO = Joi.object({
@@ -32,6 +32,13 @@ export const UpdateUsuarioDTO = Joi.object({
         .optional(),
     enable: Joi.boolean().strict().default(true).optional(),
     direccion: Joi.string().strict().optional(),
+    logo_negocio: Joi.string().strict().optional(),
+    nombre_negocio: Joi.string().strict().optional(),
+});
 
-    negocioId: Joi.number().allow(null)
+export const UpdateUsuarioOauthDTO =Joi.object({
+    enable: Joi.boolean().strict().default(true).optional(),
+    direccion: Joi.string().strict().required(),
+    logo_negocio: Joi.string().strict().required(),
+    nombre_negocio: Joi.string().strict().required(),
 });
