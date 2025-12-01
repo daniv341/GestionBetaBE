@@ -22,86 +22,53 @@ datasource db {
 // ? indica que la relacion es opcional, es decir puede ser nula o opcional mejor dicho
 // relation indica que hay una relacion entre 2 tablas
 
-model Producto{
-  id                  Int         @id @default(autoincrement())
-  nombre              String
-  descripcion         String
-  precio_venta        Float
-  precio_compra       Float
-  categoria           String
-  SKU                 String      @unique
-  stock_actual        Int
-  stock_minimo        Int
-  enable              Boolean     @default(true)
-
-  //relacion con inventario, indica que la clave foranea (inventarioId) se relacionara con la otra tabla (Inventario) usando como referencia el id de la tabla padra (Inventario)
-  inventarioId        Int?        @unique
-  inventario          Inventario? @relation(fields: [inventarioId],references: [id])
-}
-
 model Usuario{
   uid               String        @id @default(cuid())
   email             String        @unique
-  nombre            String        @unique
+  nombre            String        
   contraseña        String    
   enable            Boolean       @default(true)
-  direccion         String
-
-  //relacion con negocio
-  negocioId         Int?          @unique
-  negocio           Negocio?      @relation(fields: [negocioId],references: [id])
-}
-
-model UsuarioOAuth {
-  uid               String        @id @default(cuid())
-  email             String        @unique
-  nombre            String?
-  foto              String?
-  enable            Boolean       @default(true)
   direccion         String?
-
-  //relacion con negocio
-  negocioId         Int?          @unique
-  negocio           Negocio?      @relation(fields: [negocioId],references: [id])
-}
-
-
-model Inventario{
-  id                Int           @id @default(autoincrement())
-  ubicacion         Int
+  logo_negocio       String?
+  nombre_negocio     String?
+  fecha_creacion    DateTime      @default(now())
 
   productos         Producto[]
-
-  //relacion con negocio
-  negocioId      Int?             @unique
-  negocio        Negocio?         @relation(fields: [negocioId],references: [id])
+  compras           Compra[]
+  proveedores       Proveedor[]
+  ventas            Venta[]
 }
 
-model Negocio{
+model Producto{
   id                Int           @id @default(autoincrement())
-  logo              String        @unique
   nombre            String
   descripcion       String
+  precio_venta      Float
+  precio_compra     Float
+  categoria         String
+  SKU               String        @unique
+  stock_actual      Int
+  stock_minimo      Int
   enable            Boolean       @default(true)
+  fecha_creacion    DateTime      @default(now())
 
-  inventario        Inventario?
-  usuario           Usuario?
-  usuarioOauth      UsuarioOAuth?
-
-  ventas            Venta[]
-  proveedores       Proveedor[]
-}
+  //relacion con inventario, indica que la clave foranea (inventarioId) se relacionara con la otra tabla (Inventario) usando como referencia el id de la tabla padra (Inventario)
+  usuarioId         String?       @unique
+  usuario           Usuario?      @relation(fields: [usuarioId],references: [uid])
+} 
 
 model Proveedor{
   id                Int           @id @default(autoincrement())
   empresa           String
   descripcion       String
+  fecha_creacion    DateTime      @default(now())
 
-  compras           Compra[]
+  compra            Compra?
 
-  //relacion con negocio
-  negocioId         Int?          @unique
-  negocio           Negocio?      @relation(fields: [negocioId],references: [id])
+  //relacion con usuario
+  usuarioId         String?       @unique
+  usuario           Usuario?      @relation(fields: [usuarioId],references: [uid])
+
 }
 
 model Venta{
@@ -109,38 +76,42 @@ model Venta{
   total             Float
   subtotal          Float
   fecha             DateTime
-  carga_impositiva  Float
+  carga_impositiva  Float?
   ident_factura     Int           @unique
   estado            Boolean       @default(true)
-  descuento         Float
+  descuento         Float?
+  fecha_creacion    DateTime      @default(now())
 
   factura           Factura?
 
-  //relacion con negocio
-  negocioId         Int?          @unique
-  negocio           Negocio?      @relation(fields: [negocioId],references: [id])
+  //relacion con usuario
+  usuarioId         String?      @unique
+  usuario           Usuario?     @relation(fields: [usuarioId],references: [uid])
+}
+
+model Compra{
+  uid               String       @id @default(cuid())
+  total             Float
+  carga_impositiva  Float?
+  ident_factura     Int          @unique
+  estado            Boolean      @default(true)
+
+  //relacion con usuario
+  usuarioId         String?      @unique
+  usuario           Usuario?     @relation(fields: [usuarioId],references: [uid])
+  
+  //relacion con proveedor
+  proveedorId       Int?          @unique
+  proveedor         Proveedor?    @relation(fields: [proveedorId],references: [id])
 }
 
 model Factura{
   id                Int           @id @default(autoincrement())
   num_comprobante   Int           @unique
-  fecha_emision     DateTime
+  fecha_emision     DateTime      @default(now())
   fecha_vencimiento DateTime
 
   //relacion con venta
   ventaId           Int?          @unique
   venta             Venta?        @relation(fields: [ventaId],references: [id])
 }
-
-model Compra{
-  id                Int           @id @default(autoincrement())
-  total             Float
-  carga_impositiva  Float
-  ident_factura     Int           @unique
-  estado            Boolean       @default(true)
-
-  //relacion con proveedor
-  proveedorId       Int?          @unique
-  proveedor         Proveedor?    @relation(fields: [proveedorId],references: [id])
-}
-
