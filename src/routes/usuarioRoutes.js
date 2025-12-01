@@ -18,6 +18,9 @@ router.post("/register", usuarioControllers.registerUsuario);
 // POST /api/v1/usuarios/login - crear un usuario
 router.post("/login", usuarioControllers.loginUsuario);
 
+// POST /api/v1/oauth/logoutUser - realiza el logout del usuario e invalida el token
+router.post("/logoutUser", verificarBlacklist, verificarToken, usuarioControllers.logoutUser);
+
 // PUT /api/v1/usuarios/:uid - actualizar un usuario mediante el uid
 router.put("/:uid", usuarioControllers.updateUsuario);
 

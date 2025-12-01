@@ -58,7 +58,7 @@ const handleGoogleCallback = async (code) => {
     }
 
     const token = jwt.sign(
-        { email: user.email },
+        { uid: user.uid, email: user.email },
         process.env.JWT_SECRET,
         { expiresIn: "2h" }
       );

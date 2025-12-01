@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../config/db.js";
 import "dotenv/config";
+import logoutServices from "../services/logoutServices.js"
 
 const getAllSystemUsuarios = async () => {
     const usuarios = await prisma.Usuario.findMany();
@@ -60,6 +61,11 @@ const loginUsuario = async (data) => {
     return {token}
 };
 
+const logoutUser = async(req, res)  => {
+    const logout = await logoutServices.logoutUser(token);
+    return res.json(logout);
+};
+
 const updateUsuario = async (uid, data) => {
     const { contraseña } = data;
 
@@ -86,6 +92,7 @@ export {
     getUsuarioById,
     registerUsuario,
     loginUsuario,
+    logoutUser,
     updateUsuario,
     deleteUsuario
 };

@@ -1,5 +1,6 @@
 import { UpdateUsuarioOauthDTO } from "../models/oauthModel.js";
 import * as oauthServices from "../services/oauthServices.js";
+import logoutServices from "../services/logoutServices.js"
 
 const getGoogleRedirect = async (req, res) => {
     try {
@@ -29,6 +30,11 @@ const getGoogleCallback = async (req, res) => {
         console.error("Error login usuario with Google:", error);
         return res.status(500).json({ error: error.message });
     }
+};
+
+const logoutUserOauth = async(req, res)  => {
+    const logout = await logoutServices.logoutUser(token);
+    return res.json(logout);
 };
 
 const getAllUsuariosOauth = async (req, res) => {
@@ -111,6 +117,7 @@ const deleteUsuarioOauth = async (req, res) => {
 export {
     getGoogleRedirect,
     getGoogleCallback,
+    logoutUserOauth,
     getAllUsuariosOauth,
     getUsuarioOauthByUid,
     updateUsuarioOauth,

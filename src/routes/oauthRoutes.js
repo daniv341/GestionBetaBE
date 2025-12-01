@@ -1,5 +1,7 @@
 import express from "express";
 import * as oauthControllers from "../controllers/oauthControllers.js";
+import verificarBlacklist from "../middleware/verificarBlacklist.js"
+import verificarToken from "../middleware/verificarToken.js"
 
 const router = express.Router();
 
@@ -8,6 +10,9 @@ router.get("/google", oauthControllers.getGoogleRedirect);
 
 // GET /api/v1/oauth/googleCallback - lo que retorna Google luego de completado el login
 router.get("/googleCallback", oauthControllers.getGoogleCallback);
+
+// POST /api/v1/oauth/logoutUserOauth - realiza el logout del usuario e invalida el token
+router.post("/logoutUserOauth", verificarBlacklist, verificarToken, oauthControllers.logoutUserOauth);
 
 // GET /api/v1/oauth/getAllUsuariosOauth - obtener todos los usuarios y sus parametros
 router.get("/", oauthControllers.getAllUsuariosOauth);

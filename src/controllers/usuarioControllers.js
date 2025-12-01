@@ -1,6 +1,7 @@
 import * as usuarioServices from "../services/usuarioSevices.js";
 import { CreateUsuarioDTO, LoginUsuarioDTO, UpdateUsuarioDTO } from "../models/usuarioModel.js";
 import prisma from "../config/db.js";
+import logoutServices from "../services/logoutServices.js"
 
 const getAllSystemUsuarios = async (req, res) => {
     try {
@@ -103,6 +104,11 @@ const loginUsuario = async (req, res) => {
 
 }
 
+const logoutUser = async(req, res)  => {
+    const logout = await logoutServices.logoutUser(token);
+    return res.json(logout);
+};
+
 const updateUsuario = async (req, res) => {
     try {
         const uid = String(req.params.uid);
@@ -157,6 +163,7 @@ export {
     getUsuarioById,
     registerUsuario,
     loginUsuario,
+    logoutUser,
     updateUsuario,
     deleteUsuario
 }
