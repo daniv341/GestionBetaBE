@@ -1,10 +1,12 @@
 import express from "express";
 import * as usuarioControllers from "../controllers/usuarioControllers.js";
+import { verificarBlacklist } from "../middleware/verificarBlacklist.js"
+import { verificarToken } from "../middleware/verificarToken.js"
 
 const router = express.Router();
 
 // GET /api/v1/usuarios/systemUsuarios - obtener todos los usuarios del sistema y sus parametros
-router.get("/systemUsuarios", usuarioControllers.getAllSystemUsuarios);
+router.get("/systemUsuarios", verificarToken, verificarBlacklist, usuarioControllers.getAllSystemUsuarios);
 
 // GET /api/v1/usuarios/ - obtener todos los usuarios y sus parametros
 router.get("/", usuarioControllers.getAllUsuarios);
@@ -18,8 +20,8 @@ router.post("/register", usuarioControllers.registerUsuario);
 // POST /api/v1/usuarios/login - crear un usuario
 router.post("/login", usuarioControllers.loginUsuario);
 
-// POST /api/v1/oauth/logoutUser - realiza el logout del usuario e invalida el token
-router.post("/logoutUser", verificarBlacklist, verificarToken, usuarioControllers.logoutUser);
+// POST /api/v1/usuarios/logoutUser - realiza el logout del usuario e invalida el token
+router.post("/logoutUser", usuarioControllers.logoutUser);
 
 // PUT /api/v1/usuarios/:uid - actualizar un usuario mediante el uid
 router.put("/:uid", usuarioControllers.updateUsuario);

@@ -1,6 +1,6 @@
 import { UpdateUsuarioOauthDTO } from "../models/oauthModel.js";
 import * as oauthServices from "../services/oauthServices.js";
-import logoutServices from "../services/logoutServices.js"
+import * as logoutServices from "../services/logoutServices.js"
 
 const getGoogleRedirect = async (req, res) => {
     try {
@@ -33,6 +33,7 @@ const getGoogleCallback = async (req, res) => {
 };
 
 const logoutUserOauth = async(req, res)  => {
+    const token = req.headers.authorization?.split(" ")[1];
     const logout = await logoutServices.logoutUser(token);
     return res.json(logout);
 };
