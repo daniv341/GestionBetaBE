@@ -53,20 +53,21 @@ model Producto{
   fecha_creacion    DateTime      @default(now())
 
   //relacion con inventario, indica que la clave foranea (inventarioId) se relacionara con la otra tabla (Inventario) usando como referencia el id de la tabla padra (Inventario)
-  usuarioId         String?       @unique
+  usuarioId         String?       
   usuario           Usuario?      @relation(fields: [usuarioId],references: [uid])
 } 
 
+//revisar, es una relacion de 1 a muchos
 model Proveedor{
   id                Int           @id @default(autoincrement())
   empresa           String
   descripcion       String
   fecha_creacion    DateTime      @default(now())
 
-  compra            Compra?
+  compras           Compra[]
 
   //relacion con usuario
-  usuarioId         String?       @unique
+  usuarioId         String?       
   usuario           Usuario?      @relation(fields: [usuarioId],references: [uid])
 
 }
@@ -84,7 +85,7 @@ model Venta{
   factura           Factura?
 
   //relacion con usuario
-  usuarioId         String?      @unique
+  usuarioId         String?      
   usuario           Usuario?     @relation(fields: [usuarioId],references: [uid])
 }
 
@@ -96,11 +97,11 @@ model Compra{
   estado            Boolean      @default(true)
 
   //relacion con usuario
-  usuarioId         String?      @unique
+  usuarioId         String?      
   usuario           Usuario?     @relation(fields: [usuarioId],references: [uid])
   
   //relacion con proveedor
-  proveedorId       Int?          @unique
+  proveedorId       Int?          
   proveedor         Proveedor?    @relation(fields: [proveedorId],references: [id])
 }
 

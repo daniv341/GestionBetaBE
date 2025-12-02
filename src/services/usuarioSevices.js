@@ -38,7 +38,7 @@ const loginUsuario = async (data) => {
             contraseña: true,
         }
     });
-    console.log(usuario);
+    
     if (!usuario) {
         return { error: `Invalid Credentials` };
     }
@@ -51,7 +51,7 @@ const loginUsuario = async (data) => {
 
     // genera el token utilizando como base JWT_SECRET que esta en .env
     const token = jwt.sign(
-        { uid: data.uid, email: data.email },
+        { uid: usuario.uid, email: usuario.email },
         process.env.JWT_SECRET,
         { expiresIn: "2h" }
     );
