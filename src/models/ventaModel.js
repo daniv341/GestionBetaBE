@@ -3,23 +3,23 @@ import Joi from "joi"
 export const CreateVentaDTO = Joi.object({
     total: Joi.number().strict().positive().required(),
     subtotal: Joi.number().strict().positive().required(),
-    fecha: Joi.date().iso().strict().required(),
-    carga_impositiva: Joi.number().strict().positive().required(),
+    fecha: Joi.date().iso().required(),
+    carga_impositiva: Joi.number().strict().positive().allow(null),
     ident_factura: Joi.number().strict().positive().required(),
     estado: Joi.boolean().strict().default(true),
-    descuento: Joi.number().strict().positive().required(),
+    descuento: Joi.number().strict().positive().allow(null),
 
-    negocioId: Joi.number().allow(null)
+    usuarioId: Joi.string().allow(null)
 });
 
 export const UpdateVentaDTO = Joi.object({
     total: Joi.number().strict().positive().optional(),
     subtotal: Joi.number().strict().positive().optional(),
-    fecha: Joi.date().iso().strict().optional(),
-    carga_impositiva: Joi.number().strict().positive().optional(),
+    fecha: Joi.date().iso().optional(),
+    carga_impositiva: Joi.number().strict().positive().allow(null),
     ident_factura: Joi.number().strict().positive().optional(),
     estado: Joi.boolean().strict().default(true),
-    descuento: Joi.number().strict().positive(),
+    descuento: Joi.number().strict().positive().allow(null),
 
-    negocioId: Joi.number().allow(null)
+    usuarioId: Joi.string().allow(null)
 }).min(1);

@@ -1,6 +1,7 @@
 import * as usuarioServices from "../services/usuarioSevices.js";
 import { CreateUsuarioDTO, LoginUsuarioDTO, UpdateUsuarioDTO } from "../models/usuarioModel.js";
 import prisma from "../config/db.js";
+import * as logoutServices from "../services/logoutServices.js"
 
 const getAllUsuarios = async (req, res) => {
     try {
@@ -14,12 +15,13 @@ const getAllUsuarios = async (req, res) => {
 
 const getUsuarioById = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            return res.status(400).json({ error: "Invalid usuario ID" });
+        const uid = String(req.params.uid);
+
+        if (!typeof uid == 'string') {
+            return res.status(400).json({ error: "Invalid usuario UID" });
         }
 
-        const usuario = await usuarioServices.getUsuarioById(id);
+        const usuario = await usuarioServices.getUsuarioById(uid);
         if (!usuario) {
             return res.status(404).json({ error: "Usuario not found" });
         }
@@ -41,12 +43,12 @@ const registerUsuario = async (req, res) => {
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        //verificar nombre existente
-        const nombreExistente = await prisma.Usuario.findUnique({
-            where: { nombre: data.nombre },
+        //verificar email existente
+        const emailExistente = await prisma.Usuario.findUnique({
+            where: { email: data.email },
         });
-        if (nombreExistente) {
-            return { error: `A usuario with nombre "${data.nombre}" already exists` };
+        if (emailExistente) {
+            return res.status(400).json({ error: `A usuario with email "${data.email}" already exists` });
         }
 
         const usuario = await usuarioServices.registerUsuario(data);
@@ -70,7 +72,7 @@ const loginUsuario = async (req, res) => {
 
         const usuario = await usuarioServices.loginUsuario(data);
 
-        // enviar token al header
+        // enviar token al header, no funciona xd pero lo dejo por las dudas
         res.setHeader("Authorization", `Bearer ${data.token}`);
 
         return res.status(201).json(usuario);
@@ -82,16 +84,18 @@ const loginUsuario = async (req, res) => {
 
 }
 
+const logoutUser = async(req, res)  => {
+    const token = req.headers.authorization?.split(" ")[1];
+    const logout = await logoutServices.logoutUser(token);
+    return res.json(logout);
+};
+
 const updateUsuario = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
-
-        //verificar id existente
-        if (isNaN(id)) {
-            return res.status(400).json({ error: "Invalid usuario ID" });
-        }
+        const uid = String(req.params.uid);
 
         const data = req.body;
+        console.log(data);
 
         //verificar DTO
         const { error } = UpdateUsuarioDTO.validate(data)
@@ -99,15 +103,7 @@ const updateUsuario = async (req, res) => {
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        //verificar nombre existente
-        const nombreExistente = await prisma.Usuario.findUnique({
-            where: { nombre: data.nombre },
-        });
-        if (nombreExistente) {
-            return res.status(400).json({ error: `A usuario with ident_Factura "${data.ident_Factura}" already exists` });
-        }
-
-        const usuario = await usuarioServices.updateUsuario(id, data);
+        const usuario = await usuarioServices.updateUsuario(uid, data);
 
         if (!usuario) {
             return res.status(404).json({ error: "Usuario not found" });
@@ -123,13 +119,13 @@ const updateUsuario = async (req, res) => {
 
 const deleteUsuario = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const uid = String(req.params.uid);
 
-        if (isNaN(id)) {
-            return res.status(400).json({ error: "Invalid Usuario ID" });
+        if (!typeof uid == "string") {
+            return res.status(400).json({ error: "Invalid Usuario UID" });
         }
 
-        await usuarioServices.deleteUsuario(id);
+        await usuarioServices.deleteUsuario(uid);
         return res.status(204).send();
 
     } catch (error) {
@@ -143,6 +139,7 @@ export {
     getUsuarioById,
     registerUsuario,
     loginUsuario,
+    logoutUser,
     updateUsuario,
     deleteUsuario
 }

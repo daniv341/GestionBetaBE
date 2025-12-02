@@ -7,11 +7,14 @@ const getAllUsuarios = async () => {
     return prisma.Usuario.findMany();
 };
 
-const getUsuarioById = async (id) => {
+const getUsuarioById = async (uid) => {
     return prisma.Usuario.findUnique({
-        where: { id }
+        where: { uid }
     });
 };
+
+// hash encripta la contraseña (o parametro) usando la sal (10)
+// ...data indica el resto de la estructura del objeto sin tener que esecificarlo
 
 const registerUsuario = async (data) => {
     const { contraseña } = data;
@@ -28,50 +31,61 @@ const registerUsuario = async (data) => {
 
 const loginUsuario = async (data) => {
     const usuario = await prisma.Usuario.findUnique({
-        where: { nombre: data.nombre },
+        where: { email: data.email },
+        select: {
+            uid: true,
+            email: true,
+            contraseña: true,
+        }
     });
+    
     if (!usuario) {
         return { error: `Invalid Credentials` };
     }
 
-    //el primer parametro es la contraseña ue viene del body y la segunda la contraseña de la bd
+    // el primer parametro es la contraseña ue viene del body y la segunda la contraseña de la bd
     const contraseñaCorrecta = await bcrypt.compare(data.contraseña, usuario.contraseña);
     if (!contraseñaCorrecta) {
         return { error: `Invalid Credentials` };
     }
 
+    // genera el token utilizando como base JWT_SECRET que esta en .env
     const token = jwt.sign(
-        { nombre: data.nombre },
+        { uid: usuario.uid, email: usuario.email },
         process.env.JWT_SECRET,
         { expiresIn: "2h" }
-      );
+    );
 
-    return {token, data}
+    return { token }
 };
 
-const updateUsuario = async (id, data) => {
+const updateUsuario = async (uid, data) => {
     const { contraseña } = data;
 
-    const nombreExistente = await prisma.Usuario.findUnique({
-        where: { nombre: data.nombre },
-    });
-    if (nombreExistente) {
-        return res.status(400).json({ error: `A usuario with nombre "${data.nombre}" already exists` });
+    if (contraseña) {
+        const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
+
+        return prisma.Usuario.update({
+            where: { uid: uid },
+            data: {
+                ...data,
+                contraseña: contraseñaHasheada,
+            }
+        });
+    } else {
+        return prisma.Usuario.update({
+            where: { uid: uid },
+            data,
+        });
     }
 
-    const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
 
-    return prisma.Usuario.create({
-        where: { id: id },
-        data: {
-            contraseña: contraseñaHasheada,
-        }
-    });
+
 };
 
-const deleteUsuario = async (id) => {
+const deleteUsuario = async (uid) => {
     return prisma.Usuario.delete({
-        where: { id: id }
+        where: { uid: uid }
     });
 };
 

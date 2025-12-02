@@ -3,7 +3,7 @@ import prisma from "./src/config/db.js";
 
 async function main() {
   try {
-    // Verificamos conexión
+    // verifica la conexion
     await prisma.$connect();
     //console.log("conectado a la base de datos con Prisma");
 

@@ -2,6 +2,13 @@ import * as productoServices from "../services/productoServices.js";
 import { CreateProductoDTO, UpdateProductoDTO } from "../models/productoModel.js";
 import prisma from "../config/db.js";
 
+// await ordena a que la ejecucion se detenga temporalmente hasta que la instruccion siguiente se complete
+// req representa la estrutura de datos, res reresenta la respuesta y next la siguiente funcion que debe ser ejecutada(usado comunmente para middleware) 
+// status indica el codgio de estado para la peticion http
+// body contiene todos los datos del objeto enviado en la peticion, params indica a que objeto o parametro en especifico se hace alusion en la peticion
+// try intenta una serie de intrucciones, catch en caso de que alguna de las instrucciones falle se ejecuta su contenido, finally una vez termina todo el try(sin errores) se ejecuta su contenido
+// const tipo de dato que no se espera que cambie
+
 const getAllProductos = async (req, res) => {
     try {
         const productos = await productoServices.getAllProductos();
@@ -15,6 +22,7 @@ const getAllProductos = async (req, res) => {
 const getProductoById = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
+
         if (isNaN(id)) {
             return res.status(400).json({ error: "Invalid producto ID" });
         }
@@ -34,6 +42,8 @@ const getProductoById = async (req, res) => {
 const createProducto = async (req, res) => {
     try {
         const data = req.body;
+        const user_uid = req.user.uid;
+        const sku = req.body.SKU;
 
         //validar DTO
         const { error } = CreateProductoDTO.validate(data)
@@ -41,15 +51,17 @@ const createProducto = async (req, res) => {
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        //verificar SKU existente
-        const SKUExistente = await prisma.Producto.findUnique({
-            where: { SKU: data.SKU },
-        });
-        if (SKUExistente) {
-            return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
+        if (sku) {
+            //verificar SKU existente
+            const SKUExistente = await prisma.Producto.findUnique({
+                where: { SKU: data.SKU },
+            });
+            if (SKUExistente) {
+                return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
+            }
         }
 
-        const producto = await productoServices.createProducto(data);
+        const producto = await productoServices.createProducto(data, user_uid);
         return res.status(201).json(producto);
 
     } catch (error) {
@@ -72,14 +84,6 @@ const updateProducto = async (req, res) => {
         const { error } = UpdateProductoDTO.validate(data)
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
-        }
-
-        //verificar SKU existente
-        const SKUExistente = await prisma.Producto.findUnique({
-            where: { SKU: data.SKU },
-        });
-        if (SKUExistente) {
-            return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
         }
 
         const producto = await productoServices.updateProducto(id, data);

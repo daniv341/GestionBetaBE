@@ -75,14 +75,6 @@ const updateVenta = async (req, res) => {
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        //verificar idet_factura existente
-        const ident_facturaExistente = await prisma.Venta.findUnique({
-            where: { ident_factura: data.ident_factura },
-        });
-        if (ident_facturaExistente) {
-            return res.status(400).json({ error: `A venta with ident_Factura "${data.ident_Factura}" already exists` });
-        }
-
         const venta = await ventaServices.updateVenta(id, data);
 
         if (!venta) {
