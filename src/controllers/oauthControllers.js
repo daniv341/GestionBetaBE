@@ -35,7 +35,7 @@ const getGoogleCallback = async (req, res) => {
 const logoutUserOauth = async(req, res)  => {
     const token = req.headers.authorization?.split(" ")[1];
     const logout = await logoutServices.logoutUser(token);
-    return res.json(logout);
+    return res.status(200).json(logout);
 };
 
 const updateUsuarioOauth = async (req, res) => {
@@ -59,7 +59,7 @@ const updateUsuarioOauth = async (req, res) => {
             return res.status(404).json({ error: "Usuario not found" });
         }
 
-        res.json(usuario);
+        return res.status(200).json(usuario);
     } catch (error) {
         console.error("Error updating Usuario:", error);
         res.status(500).json({ error: "Internal server error" });

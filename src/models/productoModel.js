@@ -9,6 +9,7 @@ import Joi from "joi"
 // allow(null) permite que el parametro sea null, recuerda que la bd tambien lo debe permitir
 // min(1) sirve para que en caso de que el usuario envie un JSON vacio no salte un error
 // export indica que el metodo sera exportado para poder ser usado en otro lado
+// fordibben prohibe que el parametro sea enviado por el usuario en el requesr
 
 export const CreateProductoDTO = Joi.object({
     nombre: Joi.string().strict().required(),
@@ -21,7 +22,7 @@ export const CreateProductoDTO = Joi.object({
     stock_minimo: Joi.number().strict().positive().required(),
     enable: Joi.boolean().strict().default(true),
 
-    usuarioId: Joi.string().allow(null)
+    //usuarioId: Joi.string().default(null).forbidden()
 });
 
 export const UpdateProductoDTO = Joi.object({
@@ -30,10 +31,9 @@ export const UpdateProductoDTO = Joi.object({
     precio_venta: Joi.number().strict().positive().optional(),
     precio_compra: Joi.number().strict().positive().optional(),
     categoria: Joi.string().strict().optional(),
-    SKU: Joi.string().strict().optional().allow(null),
     stock_actual: Joi.number().strict().positive(),
     stock_minimo: Joi.number().strict().positive().optional(),
     enable: Joi.boolean().strict().default(true),
     
-    usuarioId: Joi.string().allow(null).optional()
+    //usuarioId: Joi.string().default(null).forbidden()
 }).min(1);

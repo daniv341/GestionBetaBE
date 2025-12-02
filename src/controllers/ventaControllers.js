@@ -5,7 +5,7 @@ import prisma from "../config/db.js";
 const getAllVentas = async (req, res) => {
     try {
         const ventas = await ventaServices.getAllVentas();
-        res.json(ventas)
+        return res.status(200).json(ventas);
     } catch (error) {
         console.error("Error getting ventas:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -24,7 +24,7 @@ const getVentaById = async (req, res) => {
             return res.status(404).json({ error: "Venta not found" });
         }
 
-        res.json(venta);
+        return res.status(200).json(venta);
     } catch (error) {
         console.error("Error getting Venta:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -34,22 +34,26 @@ const getVentaById = async (req, res) => {
 const createVenta = async (req, res) => {
     try {
         const data = req.body;
+        const user_uid = req.user.uid;
+        const ident_factura = req.body.ident_factura;
 
         //validar DTO
-        const { error } = CreateVentaDTO.validate(data)
+        const { error } = CreateVentaDTO.validate(data);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        //verificar idet_factura existente
-        const ident_facturaExistente = await prisma.Venta.findUnique({
-            where: { ident_factura: data.ident_factura },
-        });
-        if (ident_facturaExistente) {
-            return res.status(400).json({ error: `A venta with ident_Factura "${data.ident_Factura}" already exists` });
+        if (ident_factura) {
+            //verificar idet_factura existente
+            const ident_facturaExistente = await prisma.Venta.findUnique({
+                where: { ident_factura: data.ident_factura },
+            });
+            if (ident_facturaExistente) {
+                return res.status(400).json({ error: "A venta with ident_Factura "+data.ident_Factura+" already exists" });
+            }
         }
 
-        const venta = await ventaServices.createVenta(data);
+        const venta = await ventaServices.createVenta(data, user_uid);
         return res.status(201).json(venta);
 
     } catch (error) {
@@ -70,7 +74,7 @@ const updateVenta = async (req, res) => {
         const data = req.body;
 
         //verificar DTO
-        const { error } = UpdateVentaDTO.validate(data)
+        const { error } = UpdateVentaDTO.validate(data);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
@@ -81,7 +85,7 @@ const updateVenta = async (req, res) => {
             return res.status(404).json({ error: "Venta not found" });
         }
 
-        return res.json(venta);
+        return res.status(200).json(venta);
 
     } catch (error) {
         console.error("Error updating venta:", error);

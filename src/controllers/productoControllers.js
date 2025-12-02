@@ -1,4 +1,5 @@
 import * as productoServices from "../services/productoServices.js";
+import * as funcionesUtilidad from "../utils/funcionesUtilidad.js";
 import { CreateProductoDTO, UpdateProductoDTO } from "../models/productoModel.js";
 import prisma from "../config/db.js";
 
@@ -12,7 +13,7 @@ import prisma from "../config/db.js";
 const getAllProductos = async (req, res) => {
     try {
         const productos = await productoServices.getAllProductos();
-        res.json(productos);
+        return res.status(200).json(productos);
     } catch (error) {
         console.error("Error getting productos:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -32,7 +33,7 @@ const getProductoById = async (req, res) => {
             return res.status(404).json({ error: "Producto not found" });
         }
 
-        res.json(producto);
+        return res.status(200).json(producto);
     } catch (error) {
         console.error("Error getting Producto:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -46,9 +47,27 @@ const createProducto = async (req, res) => {
         const sku = req.body.SKU;
 
         //validar DTO
-        const { error } = CreateProductoDTO.validate(data)
+        const { error } = CreateProductoDTO.validate(data);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
+        }
+
+        // corrobora que el precio de venta sea mayor que el de compra
+        const precio_venta = data.precio_venta;
+        const precio_compra = data.precio_compra;
+
+        const verificarPrecio = await funcionesUtilidad.verificarMayorMenorParametro(precio_venta, precio_compra);
+        if (verificarPrecio == false) {
+            return res.status(400).json({ error: "The precio_venta " + precio_venta + " cannot be less than the precio_compra " + precio_compra })
+        }
+
+        // corrobora que el precio actual sea mayor que el minimo
+        const stock_actual = data.stock_actual;
+        const stock_minimo = data.stock_minimo;
+
+        const verificarStock = await funcionesUtilidad.verificarMayorMenorParametro(stock_actual, stock_minimo);
+        if (verificarStock == false) {
+            return res.status(400).json({ error: "The stock_actual " + stock_actual + " cannot be less than the stock_minimo " + stock_minimo })
         }
 
         if (sku) {
@@ -57,7 +76,7 @@ const createProducto = async (req, res) => {
                 where: { SKU: data.SKU },
             });
             if (SKUExistente) {
-                return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
+                return res.status(400).json({ error: "A producto with SKU " + data.SKU + " already exists" });
             }
         }
 
@@ -81,9 +100,27 @@ const updateProducto = async (req, res) => {
         const data = req.body;
 
         //validar DTO
-        const { error } = UpdateProductoDTO.validate(data)
+        const { error } = UpdateProductoDTO.validate(data);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
+        }
+
+        // corrobora que el precio de venta sea mayor que el de compra
+        const precio_venta = data.precio_venta;
+        const precio_compra = data.precio_compra;
+
+        const verificarPrecio = await funcionesUtilidad.verificarMayorMenorParametro(precio_venta, precio_compra);
+        if (verificarPrecio == false) {
+            return res.status(400).json({ error: "The precio_venta " + precio_venta + " cannot be less than the precio_compra " + precio_compra })
+        }
+
+        // corrobora que el precio actual sea mayor que el minimo
+        const stock_actual = data.stock_actual;
+        const stock_minimo = data.stock_minimo;
+
+        const verificarStock = await funcionesUtilidad.verificarMayorMenorParametro(stock_actual, stock_minimo);
+        if (verificarStock == false) {
+            return res.status(400).json({ error: "The stock_actual " + stock_actual + " cannot be less than the stock_minimo " + stock_minimo })
         }
 
         const producto = await productoServices.updateProducto(id, data);
@@ -92,8 +129,7 @@ const updateProducto = async (req, res) => {
             return res.status(404).json({ error: "Producto not found" });
         }
 
-        return res.json(producto);
-
+        return res.status(200).json(producto);
     } catch (error) {
         console.error("Error updating Producto:", error);
         return res.status(500).json({ error: error.message });

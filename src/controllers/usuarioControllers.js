@@ -6,7 +6,7 @@ import * as logoutServices from "../services/logoutServices.js"
 const getAllUsuarios = async (req, res) => {
     try {
         const usuarios = await usuarioServices.getAllUsuarios();
-        res.json(usuarios);
+        return res.status(200).json(usuarios);
     } catch (error) {
         console.error("Error getting usuarios:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -26,7 +26,7 @@ const getUsuarioById = async (req, res) => {
             return res.status(404).json({ error: "Usuario not found" });
         }
 
-        res.json(usuario);
+        return res.status(200).json(usuario);
     } catch (error) {
         console.error("Error getting Usuario:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -38,7 +38,7 @@ const registerUsuario = async (req, res) => {
         const data = req.body;
 
         //validar DTO
-        const { error } = CreateUsuarioDTO.validate(data)
+        const { error } = CreateUsuarioDTO.validate(data);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
@@ -64,8 +64,11 @@ const loginUsuario = async (req, res) => {
     try {
         const data = req.body;
 
-        //validar DTO
-        const { error } = LoginUsuarioDTO.validate(data)
+        //validar DTO 
+        //allowUnknown prohibe que el usuario envie otro parametro que no sean los que estan definidos en el DTO
+        const { error } = LoginUsuarioDTO.validate(data, {
+            allowUnknown: false
+        });
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
@@ -75,7 +78,7 @@ const loginUsuario = async (req, res) => {
         // enviar token al header, no funciona xd pero lo dejo por las dudas
         res.setHeader("Authorization", `Bearer ${data.token}`);
 
-        return res.status(201).json(usuario);
+        return res.status(200).json(usuario);
 
     } catch (error) {
         console.error("Error login usuario:", error);
@@ -87,7 +90,7 @@ const loginUsuario = async (req, res) => {
 const logoutUser = async(req, res)  => {
     const token = req.headers.authorization?.split(" ")[1];
     const logout = await logoutServices.logoutUser(token);
-    return res.json(logout);
+    return res.status(200).json(logout);
 };
 
 const updateUsuario = async (req, res) => {
@@ -98,7 +101,7 @@ const updateUsuario = async (req, res) => {
         console.log(data);
 
         //verificar DTO
-        const { error } = UpdateUsuarioDTO.validate(data)
+        const { error } = UpdateUsuarioDTO.validate(data);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
@@ -109,8 +112,7 @@ const updateUsuario = async (req, res) => {
             return res.status(404).json({ error: "Usuario not found" });
         }
 
-        return res.json(usuario);
-
+        return res.status(200).json(usuario);
     } catch (error) {
         console.error("Error updating usuario:", error);
         return res.status(500).json({ error: error.message });
