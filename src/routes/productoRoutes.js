@@ -12,7 +12,7 @@ router.get("/",verificarToken, verificarBlacklist, productoControllers.getAllPro
 router.get("/:id", productoControllers.getProductoById);
 
 // POST /api/v1/productos - crear un producto
-router.post("/", productoControllers.createProducto);
+router.post("/",verificarToken, verificarBlacklist, productoControllers.createProducto);
 
 // PUT /api/v1/productos/:id - actualizar un producto mediante el id
 router.put("/:id", productoControllers.updateProducto);

@@ -95,6 +95,7 @@ const updateUsuario = async (req, res) => {
         const uid = String(req.params.uid);
 
         const data = req.body;
+        console.log(data);
 
         //verificar DTO
         const { error } = UpdateUsuarioDTO.validate(data)

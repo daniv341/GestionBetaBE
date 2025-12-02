@@ -42,6 +42,8 @@ const getProductoById = async (req, res) => {
 const createProducto = async (req, res) => {
     try {
         const data = req.body;
+        const user_uid = req.user.uid;
+        const sku = req.body.SKU;
 
         //validar DTO
         const { error } = CreateProductoDTO.validate(data)
@@ -49,15 +51,17 @@ const createProducto = async (req, res) => {
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        //verificar SKU existente
-        const SKUExistente = await prisma.Producto.findUnique({
-            where: { SKU: data.SKU },
-        });
-        if (SKUExistente) {
-            return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
+        if (sku) {
+            //verificar SKU existente
+            const SKUExistente = await prisma.Producto.findUnique({
+                where: { SKU: data.SKU },
+            });
+            if (SKUExistente) {
+                return res.status(400).json({ error: `A producto with SKU "${data.SKU}" already exists` });
+            }
         }
 
-        const producto = await productoServices.createProducto(data);
+        const producto = await productoServices.createProducto(data, user_uid);
         return res.status(201).json(producto);
 
     } catch (error) {

@@ -32,7 +32,13 @@ const registerUsuario = async (data) => {
 const loginUsuario = async (data) => {
     const usuario = await prisma.Usuario.findUnique({
         where: { email: data.email },
+        select: {
+            uid: true,
+            email: true,
+            contraseña: true,
+        }
     });
+    console.log(usuario);
     if (!usuario) {
         return { error: `Invalid Credentials` };
     }
@@ -48,23 +54,33 @@ const loginUsuario = async (data) => {
         { uid: data.uid, email: data.email },
         process.env.JWT_SECRET,
         { expiresIn: "2h" }
-      );
+    );
 
-    return {token}
+    return { token }
 };
 
 const updateUsuario = async (uid, data) => {
     const { contraseña } = data;
 
-    const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
+    if (contraseña) {
+        const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
 
-    return prisma.Usuario.update({
-        where: { uid: uid },
-        data: {
-            ...data,
-            contraseña: contraseñaHasheada,
-        }
-    });
+        return prisma.Usuario.update({
+            where: { uid: uid },
+            data: {
+                ...data,
+                contraseña: contraseñaHasheada,
+            }
+        });
+    } else {
+        return prisma.Usuario.update({
+            where: { uid: uid },
+            data,
+        });
+    }
+
+
+
 };
 
 const deleteUsuario = async (uid) => {

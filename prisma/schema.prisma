@@ -46,7 +46,7 @@ model Producto{
   precio_venta      Float
   precio_compra     Float
   categoria         String
-  SKU               String        @unique
+  SKU               String?        @unique
   stock_actual      Int
   stock_minimo      Int
   enable            Boolean       @default(true)
@@ -75,7 +75,6 @@ model Venta{
   id                Int           @unique @default(autoincrement())
   total             Float
   subtotal          Float
-  fecha             DateTime
   carga_impositiva  Float?
   ident_factura     Int           @unique
   estado            Boolean       @default(true)

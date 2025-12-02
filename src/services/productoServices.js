@@ -22,9 +22,12 @@ const getProductoByCategoria = async (categoria) => {
   });
 };
 
-const createProducto = async (data) => {
+const createProducto = async (data, user_uid) => {
   return prisma.Producto.create({
-    data
+    data: {
+      ...data,
+      usuarioId: user_uid,
+    }
   });
 };
 
