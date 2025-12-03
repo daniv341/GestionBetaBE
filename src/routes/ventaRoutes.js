@@ -8,7 +8,11 @@ import * as ventaControllers from "../controllers/ventaControllers.js";
 // put es una peticion para actualizar datos de algo en especifico(que ya fue creado)
 // delete es una peticion para eliminar datos de algo en especifico
 
+
 const router = express.Router();
+
+// hace que antes de cada ruta se ejecuten los middlewares
+router.use(verificarToken, verificarBlacklist);
 
 // GET /api/v1/ventas - obtener todas las ventas y sus parametros
 router.get("/", ventaControllers.getAllVentas);

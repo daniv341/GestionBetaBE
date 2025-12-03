@@ -28,4 +28,4 @@ const verificarToken = (req, res, next) => {
 
 export {
     verificarToken
-}
+};

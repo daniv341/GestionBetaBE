@@ -10,6 +10,7 @@ import Joi from "joi"
 // min(1) sirve para que en caso de que el usuario envie un JSON vacio no salte un error
 // export indica que el metodo sera exportado para poder ser usado en otro lado
 // fordibben prohibe que el parametro sea enviado por el usuario en el requesr
+// strip elimina el parametro del dto, por o general se lo usa en los dto para mostrar
 
 export const CreateProductoDTO = Joi.object({
     nombre: Joi.string().strict().required(),

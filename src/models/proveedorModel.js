@@ -1,11 +1,6 @@
-const { descripcion } = require("./negocio")
+import Joi from "joi";
 
-module.exports = {
-    empresa: {
-        type: "string", nullable: false
-    },
-
-    descripcion: {
-        type: "string", nullable: false
-    },
-}
+export const CreateProveedorDTO = Joi.object({
+    empresa: Joi.string().strict().required(),
+    descripcion: Joi.string().strict().required()
+});

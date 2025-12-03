@@ -6,10 +6,10 @@ import * as usuarioControllers from "../controllers/usuarioControllers.js";
 const router = express.Router();
 
 // GET /api/v1/usuarios/ - obtener todos los usuarios y sus parametros
-router.get("/", usuarioControllers.getAllUsuarios);
+router.get("/",verificarToken, verificarBlacklist, usuarioControllers.getAllUsuarios);
 
 // GET /api/v1/usuarios/:uid - obtener un usuario mediante el uid
-router.get("/:uid", usuarioControllers.getUsuarioById);
+router.get("/:uid",verificarToken, verificarBlacklist, usuarioControllers.getUsuarioById);
 
 // POST /api/v1/usuarios/register - crear un usuario
 router.post("/register", usuarioControllers.registerUsuario);
@@ -18,12 +18,12 @@ router.post("/register", usuarioControllers.registerUsuario);
 router.post("/login", usuarioControllers.loginUsuario);
 
 // POST /api/v1/usuarios/logoutUser - realiza el logout del usuario e invalida el token
-router.post("/logoutUser", usuarioControllers.logoutUser);
+router.post("/logoutUser",verificarToken, verificarBlacklist, usuarioControllers.logoutUser);
 
 // PUT /api/v1/usuarios/:uid - actualizar un usuario mediante el uid
-router.put("/:uid", usuarioControllers.updateUsuario);
+router.put("/:uid",verificarToken, verificarBlacklist, usuarioControllers.updateUsuario);
 
 // DELETE /api/v1/usuarios/:uid - eliminar un usuario mediante el uid
-router.delete("/:uid", usuarioControllers.deleteUsuario);
+router.delete("/:uid",verificarToken, verificarBlacklist, usuarioControllers.deleteUsuario);
 
 export default router;

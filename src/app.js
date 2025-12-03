@@ -6,8 +6,9 @@ import bodyParser from "body-parser";
 
 import productoRoutes from "./routes/productoRoutes.js";
 import ventaRoutes from "./routes/ventaRoutes.js";
-import usuarioRoutes from "./routes/usuarioRoutes.js"
-import oauthRoutes from "./routes/oauthRoutes.js"
+import usuarioRoutes from "./routes/usuarioRoutes.js";
+import oauthRoutes from "./routes/oauthRoutes.js";
+import proveedorRoutes from "./routes/proveedorRoutes.js";
 
 const app = express();
 
@@ -25,6 +26,9 @@ app.use("/api/v1/productos", productoRoutes);
 
 //rutas para ventas
 app.use("/api/v1/ventas", ventaRoutes);
+
+//rutas para ventas
+app.use("/api/v1/proveedores", proveedorRoutes);
 
 //rutas para usuarios
 app.use("/api/v1/usuarios", usuarioRoutes);

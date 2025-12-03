@@ -42,3 +42,18 @@ export const UpdateUsuarioOauthDTO =Joi.object({
     logo_negocio: Joi.string().strict().required(),
     nombre_negocio: Joi.string().strict().required(),
 });
+
+// para comprobar ciertas cosas de un DTO se usa when(antes debes tener otro DTO y usar keys)
+// is es el if, si existe comprueba si es null, then es el que hace despues, en este caso lo prohibe del DTO
+// otherwise es como un else, lo incluye en el DTO
+export const GetUsuarioDTO = Joi.object({
+    email: Joi.required(),
+    nombre: Joi.required(),
+    contraseña: Joi.strip(),
+    enable: Joi.required(),
+    direccion: Joi.required(),
+    logo_negocio: Joi.required(),
+    nombre_negocio: Joi.required(),
+});
+
+export const GetAllUsuariosDTO = Joi.array().items(GetUsuarioDTO);

@@ -12,9 +12,9 @@ router.get("/google", oauthControllers.getGoogleRedirect);
 router.get("/googleCallback", oauthControllers.getGoogleCallback);
 
 // POST /api/v1/oauth/logoutUserOauth - realiza el logout del usuario e invalida el token
-router.post("/logoutUserOauth", oauthControllers.logoutUserOauth);
+router.post("/logoutUserOauth",verificarToken, verificarBlacklist, oauthControllers.logoutUserOauth);
 
 // PUT /api/v1/oauth/:uid - actualizar un usuario mediante el uid
-router.put("/:uid", oauthControllers.updateUsuarioOauth);
+router.put("/:uid",verificarToken, verificarBlacklist, oauthControllers.updateUsuarioOauth);
 
 export default router;

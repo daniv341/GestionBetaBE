@@ -12,8 +12,10 @@ const getVentaById = async (id) => {
 
 const createVenta = async (data, user_uid) => {
   return prisma.Venta.create({
-    ...data,
-    usuarioId: user_uid,
+    data: {
+      ...data,
+      usuarioId: user_uid,
+    }
   });
 };
 

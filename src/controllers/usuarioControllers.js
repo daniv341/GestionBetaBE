@@ -1,12 +1,21 @@
 import * as usuarioServices from "../services/usuarioSevices.js";
-import { CreateUsuarioDTO, LoginUsuarioDTO, UpdateUsuarioDTO } from "../models/usuarioModel.js";
+import { CreateUsuarioDTO, LoginUsuarioDTO, UpdateUsuarioDTO, GetUsuarioDTO, GetAllUsuariosDTO } from "../models/usuarioModel.js";
 import prisma from "../config/db.js";
 import * as logoutServices from "../services/logoutServices.js"
 
 const getAllUsuarios = async (req, res) => {
     try {
         const usuarios = await usuarioServices.getAllUsuarios();
-        return res.status(200).json(usuarios);
+
+        //elimina la contraseña del json para no mostrarla por mas de que este encriptada
+        const { error, value: usuariosLimpios } = GetAllUsuariosDTO.validate(usuarios, {
+            allowUnknown: true
+        });
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
+
+        return res.status(200).json(usuariosLimpios);
     } catch (error) {
         console.error("Error getting usuarios:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -26,7 +35,15 @@ const getUsuarioById = async (req, res) => {
             return res.status(404).json({ error: "Usuario not found" });
         }
 
-        return res.status(200).json(usuario);
+        //elimina la contraseña del json para no mostrarla por mas de que este encriptada
+        const { error, value: usuarioLimpio } = GetUsuarioDTO.validate(usuario, {
+            allowUnknown: true
+        });
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        }
+
+        return res.status(200).json(usuarioLimpio);
     } catch (error) {
         console.error("Error getting Usuario:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -66,9 +83,7 @@ const loginUsuario = async (req, res) => {
 
         //validar DTO 
         //allowUnknown prohibe que el usuario envie otro parametro que no sean los que estan definidos en el DTO
-        const { error } = LoginUsuarioDTO.validate(data, {
-            allowUnknown: false
-        });
+        const { error } = LoginUsuarioDTO.validate(data);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
@@ -87,7 +102,7 @@ const loginUsuario = async (req, res) => {
 
 }
 
-const logoutUser = async(req, res)  => {
+const logoutUser = async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     const logout = await logoutServices.logoutUser(token);
     return res.status(200).json(logout);
@@ -98,7 +113,6 @@ const updateUsuario = async (req, res) => {
         const uid = String(req.params.uid);
 
         const data = req.body;
-        console.log(data);
 
         //verificar DTO
         const { error } = UpdateUsuarioDTO.validate(data);

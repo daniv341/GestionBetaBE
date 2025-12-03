@@ -15,7 +15,7 @@ const getAllProductos = async (req, res) => {
         const productos = await productoServices.getAllProductos();
         return res.status(200).json(productos);
     } catch (error) {
-        console.error("Error getting productos:", error);
+        console.error("Error getting Productos:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
@@ -25,7 +25,7 @@ const getProductoById = async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            return res.status(400).json({ error: "Invalid producto ID" });
+            return res.status(400).json({ error: "Invalid Producto ID" });
         }
 
         const producto = await productoServices.getProductoById(id);
@@ -159,4 +159,4 @@ export {
     createProducto,
     updateProducto,
     deleteProducto
-}
+};
