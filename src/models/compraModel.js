@@ -1,17 +1,10 @@
-module.exports = {
-    monto: {
-        type: "number", nullable: false
-    },
+import Joi from "joi";
 
-    carga_impositiva: {
-        type: "number", nullable: false
-    },
+export const CreateCompraDTO = Joi.object({
+    total: Joi.number().strict().positive().required(),
+    carga_impositiva: Joi.number().strict().positive().optional(),
+    ident_factura: Joi.number().strict().positive().required(),
+    estado: Joi.boolean().strict().default(true),
 
-    ident_fatura: {
-        type: "number", nullable: false
-    },
-
-    estado: {
-        type: "boolean", nullable: false, default: true
-    },
-}
+    proveedorId: Joi.number().strict().positive().required()
+});

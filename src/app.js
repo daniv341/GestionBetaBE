@@ -9,6 +9,7 @@ import ventaRoutes from "./routes/ventaRoutes.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import oauthRoutes from "./routes/oauthRoutes.js";
 import proveedorRoutes from "./routes/proveedorRoutes.js";
+import compraRoutes from "./routes/compraRoutes.js";
 
 const app = express();
 
@@ -27,8 +28,11 @@ app.use("/api/v1/productos", productoRoutes);
 //rutas para ventas
 app.use("/api/v1/ventas", ventaRoutes);
 
-//rutas para ventas
+//rutas para proveedores
 app.use("/api/v1/proveedores", proveedorRoutes);
+
+//rutas para compras
+app.use("/api/v1/compras", compraRoutes);
 
 //rutas para usuarios
 app.use("/api/v1/usuarios", usuarioRoutes);

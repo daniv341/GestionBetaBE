@@ -6,7 +6,10 @@ const getAllProveedores = async () => {
 
 const getProveedorById = async (id) => {
     return prisma.Proveedor.findUnique({
-        where: { id }
+        where: { id },
+        include: {
+            compras: true,
+        }
     });
 };
 
