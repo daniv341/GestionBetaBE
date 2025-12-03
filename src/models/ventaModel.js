@@ -21,3 +21,12 @@ export const UpdateVentaDTO = Joi.object({
 
     //usuarioId: Joi.string().default(null).forbidden()
 }).min(1);
+
+export const CreateFacturaDTO = Joi.object({
+    fecha_vencimiento: Joi.date().iso().required()
+});
+
+export const CreateVenta_FacturaDTO = Joi.object({
+    venta: CreateVentaDTO.required(),
+    factura: CreateFacturaDTO.required()
+});

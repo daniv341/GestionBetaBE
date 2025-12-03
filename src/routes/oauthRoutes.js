@@ -1,6 +1,6 @@
 import express from "express";
-import { verificarToken } from "../middleware/verificarToken.js";
-import { verificarBlacklist } from "../middleware/verificarBlacklist.js"
+import { verificarToken } from "../middlewares/verificarToken.js";
+import { verificarBlacklist } from "../middlewares/verificarBlacklist.js"
 import * as oauthControllers from "../controllers/oauthControllers.js";
 
 const router = express.Router();

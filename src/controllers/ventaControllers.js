@@ -1,5 +1,5 @@
 import * as ventaServices from "../services/ventaServices.js";
-import { CreateVentaDTO, UpdateVentaDTO } from "../models/ventaModel.js";
+import { CreateVenta_FacturaDTO, UpdateVentaDTO } from "../models/ventaModel.js";
 import prisma from "../config/db.js";
 
 const getAllVentas = async (req, res) => {
@@ -35,25 +35,43 @@ const createVenta = async (req, res) => {
     try {
         const data = req.body;
         const user_uid = req.user.uid;
-        const ident_factura = req.body.ident_factura;
-
+        // estos son para separar los datos de la venta y de la factura
+        const dataVenta = data.venta;
+        const dataFactura = data.factura;
+        // estos son los datos que deben ser unique de cada uno
+        const ident_factura = dataVenta.ident_factura;
+        const num_comprobante = dataFactura.num_comprobante;
+        
         //validar DTO
-        const { error } = CreateVentaDTO.validate(data);
+        const { error } = CreateVenta_FacturaDTO.validate(data);
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
         }
+        console.log("pase el dto");
 
         if (ident_factura) {
             //verificar idet_factura existente
             const ident_facturaExistente = await prisma.Venta.findUnique({
-                where: { ident_factura: data.ident_factura },
+                where: { ident_factura: dataVenta.ident_factura },
             });
             if (ident_facturaExistente) {
-                return res.status(400).json({ error: "A venta with ident_Factura "+data.ident_Factura+" already exists" });
+                return res.status(400).json({ error: "A venta with ident_Factura "+dataVenta.ident_Factura+" already exists" });
             }
         }
+        console.log("pase la venta");
 
-        const venta = await ventaServices.createVenta(data, user_uid);
+        if (num_comprobante) {
+            //verificar num_comprobante existente
+            const num_comprobanteExistente = await prisma.Factura.findUnique({
+                where: { num_comprobante: dataFactura.num_comprobante },
+            });
+            if (num_comprobanteExistente) {
+                return res.status(400).json({ error: "A factura with num_comprobante "+dataFactura.num_comprobante+" already exists" });
+            }
+        }
+        console.log("pase la factura");
+
+        const venta = await ventaServices.createVenta(dataVenta, dataFactura, user_uid);
         return res.status(201).json(venta);
 
     } catch (error) {

@@ -1,22 +1,45 @@
 import prisma from "../config/db.js";
 
 const getAllVentas = async () => {
-  return prisma.Venta.findMany();
+  return prisma.Venta.findMany({
+    include: {
+      factura: true,
+    }
+  });
 };
 
 const getVentaById = async (id) => {
   return prisma.Venta.findUnique({
-    where: { id }
+    where: { id },
+    include: {
+      factura: true,
+    }
   });
 };
 
-const createVenta = async (data, user_uid) => {
-  return prisma.Venta.create({
-    data: {
-      ...data,
-      usuarioId: user_uid,
-    }
+const createVenta = async (dataVenta, dataFactura, user_uid) => {
+  const request = await prisma.$transaction(async (prisma) => {
+
+    const venta = await prisma.Venta.create({
+      data: {
+        ...dataVenta,
+        usuarioId: user_uid,
+      }
+    });
+
+    const factura = await prisma.Factura.create({
+      data: {
+        ...dataFactura,
+        num_comprobante: venta.ident_factura,
+        ventaId: venta.id
+      }
+    });
+
+    return { venta, factura };
+
   });
+
+  return request;
 };
 
 const updateVenta = async (id, data) => {

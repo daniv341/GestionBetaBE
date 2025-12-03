@@ -1,7 +1,11 @@
 import prisma from "../config/db.js";
 
 const getAllProveedores = async () => {
-    return prisma.Proveedor.findMany();
+    return prisma.Proveedor.findMany({
+        include: {
+            compras: true,
+        }
+    });
 };
 
 const getProveedorById = async (id) => {
