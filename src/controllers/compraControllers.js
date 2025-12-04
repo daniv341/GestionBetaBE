@@ -36,7 +36,7 @@ const createCompra = async (req, res) => {
     try {
         const data = req.body;
         const user_uid = req.user.uid;
-        const ident_factura = req.body.ident_factura;
+        const num_comprobante = req.body.num_comprobante;
 
         //validar DTO
         const { error } = CreateCompraDTO.validate(data);
@@ -46,22 +46,19 @@ const createCompra = async (req, res) => {
 
         //verifica si el proveedorId enviado existe
         const proveedorExistente = await prisma.Proveedor.findUnique({
-            where: { id: data.proveedorId },
-            select: {
-                id: true,
-            }
+            where: { id: data.proveedorId }
         });
         if (!proveedorExistente) {
             return res.status(400).json({ error: "A proveedor with proveedorId " + data.proveedorId + " does not exist" });
         }
 
-        if (ident_factura) {
-            //verificar ident_factura existente
-            const ident_facturaExistente = await prisma.Compra.findUnique({
-                where: { ident_factura: data.ident_factura },
+        if (num_comprobante) {
+            //verificar num_comprobante existente
+            const num_comprobanteExistente = await prisma.Compra.findUnique({
+                where: { num_comprobante: data.num_comprobante },
             });
-            if (ident_facturaExistente) {
-                return res.status(400).json({ error: "A compra with ident_factura " + data.ident_factura + " already exists" });
+            if (num_comprobanteExistente) {
+                return res.status(400).json({ error: "A compra with num_comprobante " + data.num_comprobante + " already exists" });
             }
         }
 

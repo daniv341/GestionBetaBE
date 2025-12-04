@@ -46,15 +46,18 @@ model Producto{
   precio_venta      Float
   precio_compra     Float
   categoria         String
-  SKU               String?        @unique
+  SKU               String?       @unique
   stock_actual      Int
   stock_minimo      Int
   enable            Boolean       @default(true)
   fecha_creacion    DateTime      @default(now())
 
-  //relacion con inventario, indica que la clave foranea (inventarioId) se relacionara con la otra tabla (Inventario) usando como referencia el id de la tabla padra (Inventario)
+  //relacion con usuario, indica que la clave foranea (usuarioId) se relacionara con la otra tabla (usuario) usando como referencia el id de la tabla padre (usuario)
   usuarioId         String?       
   usuario           Usuario?      @relation(fields: [usuarioId],references: [uid])
+
+  //relacion con detalle venta
+  detalles_venta    DetalleVenta[]
 } 
 
 //revisar, es una relacion de 1 a muchos
@@ -75,9 +78,8 @@ model Proveedor{
 model Venta{
   id                Int           @unique @default(autoincrement())
   total             Float
-  subtotal          Float
+  total_bruto       Float
   carga_impositiva  Float?
-  ident_factura     Int           @unique
   estado            Boolean       @default(true)
   descuento         Float?
   fecha_creacion    DateTime      @default(now())
@@ -86,19 +88,41 @@ model Venta{
 
   //relacion con usuario
   usuarioId         String?      
-  usuario           Usuario?     @relation(fields: [usuarioId],references: [uid])
+  usuario           Usuario?      @relation(fields: [usuarioId],references: [uid])
+
+  //relacion con detalle venta
+  detalles_venta    DetalleVenta[]
+}
+
+model DetalleVenta{
+  id                Int           @unique @default(autoincrement())
+  subtotal          Float
+  cantidad          Int
+  nombre_producto   String
+
+  //relacion con producto
+  productoId        Int?
+  producto          Producto?     @relation(fields: [productoId], references: [id])
+
+  //relacion con producto
+  ventaId           Int?
+  venta             Venta?        @relation(fields: [ventaId], references: [id])
+
+  //necesario para relacion muchos a muchos, sirve para unicidad(una fila no puede tener relacion con otra en otra tabla dos veces)
+  @@unique([productoId, ventaId])
 }
 
 model Compra{
-  uid               String       @id @default(cuid())
+  uid               String        @id @default(cuid())
   total             Float
+  total_bruto       Float
   carga_impositiva  Float?
-  ident_factura     Int          @unique
-  estado            Boolean      @default(true)
+  num_comprobante   Int           @unique
+  estado            Boolean       @default(true)
 
   //relacion con usuario
   usuarioId         String?      
-  usuario           Usuario?     @relation(fields: [usuarioId],references: [uid])
+  usuario           Usuario?      @relation(fields: [usuarioId],references: [uid])
   
   //relacion con proveedor
   proveedorId       Int?          
@@ -107,9 +131,8 @@ model Compra{
 
 model Factura{
   id                Int           @id @default(autoincrement())
-  num_comprobante   Int           @unique
+  ident_factura     Int           @unique
   fecha_emision     DateTime      @default(now())
-  fecha_vencimiento DateTime
 
   //relacion con venta
   ventaId           Int?          @unique

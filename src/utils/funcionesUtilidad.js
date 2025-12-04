@@ -24,6 +24,14 @@ const verificarNull = async (datos, datoNulo) => {
         }); */
 }
 
+/*//elimina la contraseña del json para no mostrarla por mas de que este encriptada
+        const { error, value: usuarioLimpio } = GetUsuarioDTO.validate(usuario, {
+            allowUnknown: true
+        });
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message });
+        } */
+
 export {
     verificarMayorMenorParametro,
     verificarNull

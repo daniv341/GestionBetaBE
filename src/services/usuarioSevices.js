@@ -4,12 +4,19 @@ import prisma from "../config/db.js";
 import "dotenv/config";
 
 const getAllUsuarios = async () => {
-    return prisma.Usuario.findMany();
+    return prisma.Usuario.findMany({
+        omit: {
+            contraseña: true,
+        }
+    });
 };
 
 const getUsuarioById = async (uid) => {
     return prisma.Usuario.findUnique({
-        where: { uid }
+        where: { uid },
+        omit: {
+            contraseña: true,
+        }
     });
 };
 
