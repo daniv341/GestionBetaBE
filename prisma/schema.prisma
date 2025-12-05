@@ -133,6 +133,7 @@ model Factura{
   id                Int           @id @default(autoincrement())
   ident_factura     Int           @unique
   fecha_emision     DateTime      @default(now())
+  fecha_vencimiento DateTime?      
 
   //relacion con venta
   ventaId           Int?          @unique
