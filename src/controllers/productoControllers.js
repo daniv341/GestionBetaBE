@@ -12,7 +12,9 @@ import prisma from "../config/db.js";
 
 const getAllProductos = async (req, res) => {
     try {
-        const productos = await productoServices.getAllProductos();
+        const user_uid = req.user.uid;
+
+        const productos = await productoServices.getAllProductos(user_uid);
         return res.status(200).json(productos);
     } catch (error) {
         console.error("Error getting Productos:", error);
@@ -22,13 +24,14 @@ const getAllProductos = async (req, res) => {
 
 const getProductoById = async (req, res) => {
     try {
+        const user_uid = req.user.uid;
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
             return res.status(400).json({ error: "Invalid Producto ID" });
         }
 
-        const producto = await productoServices.getProductoById(id);
+        const producto = await productoServices.getProductoById(id, user_uid);
         if (!producto) {
             return res.status(404).json({ error: "Producto not found" });
         }

@@ -6,13 +6,18 @@ import prisma from "../config/db.js";
 // create es de prisma, sirve para crear la fila en la base de datos
 // update es de prisma, actualiza la fila en la base de datos segun los datos actualizados(y que se pueden actualizar)
 // delete es de prisma, elimina la columna en la base de datos
-const getAllProductos = async () => {
-  return prisma.Producto.findMany();
+const getAllProductos = async (user_uid) => {
+  return prisma.Producto.findMany({
+    where: { usuarioId: user_uid }
+  });
 };
 
-const getProductoById = async (id) => {
+const getProductoById = async (id, user_uid) => {
   return prisma.Producto.findUnique({
-    where: { id }
+    where: {
+      id,
+      usuarioId: user_uid
+    }
   });
 };
 

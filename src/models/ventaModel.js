@@ -1,9 +1,17 @@
 import Joi from "joi"
 
+const MetodoPagoEnum = [
+    "EFECTIVO",
+    "DEBITO",
+    "CREDITO"
+];
+
 export const CreateVentaDTO = Joi.object({
     carga_impositiva: Joi.number().strict().default(0),
     estado: Joi.boolean().strict().default(true),
     descuento: Joi.number().strict().default(0),
+    fecha_carga: Joi.date().iso().optional(),
+    metodo_pago: Joi.string().valid(...MetodoPagoEnum).required()
 
     //usuarioId: Joi.string().default(null).forbidden()
 });
@@ -28,6 +36,6 @@ export const CreateDetalleVentaDTO = Joi.object({
 
 export const CreateVenta_CompletaDTO = Joi.object({
     venta: CreateVentaDTO.required(),
-    factura: CreateFacturaDTO.required(),
+    //factura: CreateFacturaDTO.required(),
     detalles_venta: Joi.array().items(CreateDetalleVentaDTO).min(1).required()
 });

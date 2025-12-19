@@ -1,7 +1,8 @@
 import prisma from "../config/db.js";
 
-const getAllVentas = async () => {
+const getAllVentas = async (user_uid) => {
   return prisma.Venta.findMany({
+    where: { usuarioId: user_uid },
     include: {
       factura: true,
       detalles_venta: true,
@@ -9,9 +10,12 @@ const getAllVentas = async () => {
   });
 };
 
-const getVentaById = async (id) => {
+const getVentaById = async (id, user_uid) => {
   return prisma.Venta.findUnique({
-    where: { id },
+    where: { 
+      id,  
+      usuarioId: user_uid
+    },
     include: {
       factura: true,
       detalles_venta: true
@@ -19,7 +23,8 @@ const getVentaById = async (id) => {
   });
 };
 
-const createVenta = async (dataVenta, dataFactura, dataDetalleVenta, user_uid) => {
+// de aqui se elimino dataFactura
+const createVenta = async (dataVenta, dataDetalleVenta, user_uid) => {
   const request = await prisma.$transaction(async (prisma) => {
 
     let total_bruto = 0;
@@ -36,7 +41,10 @@ const createVenta = async (dataVenta, dataFactura, dataDetalleVenta, user_uid) =
 
     for (const item of dataDetalleVenta) {
       const producto = await prisma.Producto.findUnique({
-        where: { id: item.productoId },
+        where: { 
+          id: item.productoId,
+          usuarioId: user_uid
+         },
         select: {
           id: true,
           nombre: true,
@@ -87,14 +95,14 @@ const createVenta = async (dataVenta, dataFactura, dataDetalleVenta, user_uid) =
       }
     });
 
-    const factura = await prisma.Factura.create({
+    /*const factura = await prisma.Factura.create({
       data: {
         ...dataFactura,
         ventaId: venta.id
       }
-    });
-
-    return { venta: ventaReal, factura, detalles_venta: detallesVenta };
+    });*/
+    // de aqui se elimino factura
+    return { venta: ventaReal, detalles_venta: detallesVenta };
 
   });
 

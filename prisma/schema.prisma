@@ -4,6 +4,8 @@ generator client {
 
 // npx prisma generate - genera el cliente prisma, debes usar el comando despues de aplicar una migracion
 // npx prisma migrate dev -- name "nombre_de_la_migracion" - realiza la migracion de la base de datos y le pone el nombre que especifiques
+// npx prisma migrate reset - borra la bd, esto es util para cuando hagas cambios en los cuales sea necesario borrar la bd para que se aplique, antes te pregunta si quieres hacerlo
+// npx prisma migrate dev - asi como esta te dira si hay cambios que deban guardarse o el estado en el que se encuentra todo
 // una migracion se refiere a un cambio que le hiciste a la estructura de la base de datos
 
 // provider indica quien es el proveedor de la base de datos o del cliente(dependiendo para que lo uses)
@@ -19,8 +21,15 @@ datasource db {
 // default indica como sera dicho parametro por defecto
 // autoincrement indica que dicho parametro sera autoincremental
 // cuid es para indicar que el id sera un id unico
-// ? indica que la relacion es opcional, es decir puede ser nula o opcional mejor dicho
+// ? indica que la relacion o el parametro es opcional, es decir puede ser nula o opcional mejor dicho
 // relation indica que hay una relacion entre 2 tablas
+
+//asi se agrega enum en prisma, lo resto esta en tabla Venta
+enum MetodoPago {
+  EFECTIVO
+  DEBITO
+  CREDITO
+}
 
 model Usuario{
   uid               String        @id @default(cuid())
@@ -83,6 +92,8 @@ model Venta{
   estado            Boolean       @default(true)
   descuento         Float?
   fecha_creacion    DateTime      @default(now())
+  fecha_carga       DateTime?
+  metodo_pago       MetodoPago
 
   factura           Factura?
 
